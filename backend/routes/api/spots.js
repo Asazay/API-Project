@@ -16,24 +16,25 @@ const validateSpot = [
   .withMessage('State is required'),
   check('country').exists({checkFalsy: true}).notEmpty()
   .withMessage('Country is required'),
-  check('lat').exists({checkNull: true}).isFloat({
+  check('lat').isFloat({
     min: -90,
     max: 90
   }).withMessage('Latitude must be within -90 and 90'),
-  check('lng').exists({checkNull: true}).isFloat({
+  check('lng').isFloat({
     min: -180,
     max: 180
   })
   .withMessage('Longitude must be within -180 and 180'),
-  check('name').exists({checkFalsy: true}).notEmpty().isLength({
-    min: 1,
+  check('name').isLength({
+    min: 0,
     max: 49
   })
   .withMessage('Name must be less than 50 characters'),
   check('description').exists({checkFalsy: true}).notEmpty()
   .withMessage('Description is required'),
-  check('price').exists({checkNull: true}).isFloat({
-    min: 0
+  check('price').isFloat({
+    min: 0,
+    max: 9999999999,
   }).withMessage('Price per day must be a positive number'),
 handleValidationErrors,
 ];
