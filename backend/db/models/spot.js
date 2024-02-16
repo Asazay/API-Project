@@ -1,9 +1,9 @@
 'use strict';
 const {
-  Model, Validator
+  Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Spot extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,56 +11,63 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Spot, {
-        foreignKey: 'ownerId'
-      });
+      Spot.belongsTo(models.User);
     }
   }
-  User.init({
-    firstName: {
+  Spot.init({
+    ownerId: {
+      type: DataTypes.INTEGER,
+    },
+    address: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
+    city: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    username: {
+    state: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lat: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
       validate: {
-        len: [4, 30],
-        isNotEmail(value){
-          if(Validator.isEmail(value)){
-            throw new Error('Cannot be an email.');
-          }
-        }
+        min: -90,
+        max: 90,
       }
     },
-    email: {
-      type: DataTypes.STRING,
+    lng: {
+      type: DataTypes.DOUBLE,
       allowNull: false,
       validate: {
-        len: [3, 256],
-        isEmail: true,
+        min: -180,
+        max: 180
       }
     },
-    hashedPassword: {
-      type: DataTypes.STRING.BINARY,
+    name: {
+      type: DataTypes.STRING(49),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.DOUBLE,
       allowNull: false,
       validate: {
-        len: [60, 60]
+        min: 0,
       }
     }
   }, {
     sequelize,
-    modelName: 'User',
-    defaultScope: {
-      attributes: {
-        exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt']
-      }
-    }
+    modelName: 'Spot',
   });
-  return User;
+  return Spot;
 };
