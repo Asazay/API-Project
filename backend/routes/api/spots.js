@@ -54,6 +54,7 @@ router.post('/', validateSpot, async (req, res, next) => {
 
 router.put('/:spotId', validateSpot, async (req, res, next) => {
   const { spotId } = req.params;
+  const currUserId = req.user.id;
 
   let theSpot = await Spot.findByPk(spotId);
 
@@ -67,7 +68,7 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
     return next(err);
   }
 
-  if (theSpot.ownerId !== req.user.id) {
+  if (theSpot.ownerId !== currUserId) {
     const err = new Error('Authentication required');
     err.title = 'Authentication required';
     err.errors = { message: 'Authentication required' };
