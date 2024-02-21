@@ -39,6 +39,8 @@ const validateSpot = [
   handleValidationErrors,
 ];
 
+const checkAuthorization = [requireAuth, handleValidationErrors];
+
 const router = express.Router();
 
 router.post('/', validateSpot, async (req, res, next) => {
@@ -69,9 +71,9 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
   }
 
   if (!checkAuth(currUserId, ownerId)) {
-    const err = new Error('Authentication required');
-    err.title = 'Authentication required';
-    err.errors = { message: 'Authentication required' };
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.errors = { message: 'Authorization required' };
     err.status = 403;
     res.status(403);
     return next(err);
@@ -82,7 +84,7 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
   res.json(editSpot)
 });
 
-router.post('/:spotId/images', validateSpot, async (req, res , next) => {
+router.post('/:spotId/images', checkAuthorization, async (req, res , next) => {
   const {spotId} = req.params;
   const currUserId = req.user.id;
 
@@ -98,16 +100,21 @@ router.post('/:spotId/images', validateSpot, async (req, res , next) => {
     return next(err);
   }
 
-  if (!checkAuth(currUserId, ownerId)) {
-    const err = new Error('Authentication required');
-    err.title = 'Authentication required';
-    err.errors = { message: 'Authentication required' };
+  const isAuthorized = checkAuth(currUserId, theSpot.ownerId);
+
+  if (!isAuthorized) {
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.errors = {message: 'Authorization required'};
     err.status = 403;
-    res.status(403);
     return next(err);
   }
 
-  const addImage = await theSpot.createImage(req.body);
+  let addImage = await theSpot.createSpotImage(req.body);
+  addImage = addImage.toJSON();
+  delete addImage.createdAt;
+  delete addImage.updatedAt;
+  delete addImage.spotId;
 
   res.json(addImage);
 })

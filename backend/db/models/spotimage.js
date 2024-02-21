@@ -19,10 +19,17 @@ module.exports = (sequelize, DataTypes) => {
   SpotImage.init({
     url: DataTypes.STRING,
     preview: DataTypes.BOOLEAN,
-    spotId: DataTypes.INTEGER
+    spotId: DataTypes.INTEGER,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'SpotImage',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    }
   });
   return SpotImage;
 };
