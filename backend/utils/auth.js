@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Spot } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -70,5 +70,12 @@ const requireAuth = function (req, _res, next) {
   return next(err);
 }
 
+const checkAuth = (userId, ownerId) => {
+  if (userId !== ownerId){
+    return false;
+  }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+  return true;
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, checkAuth };
