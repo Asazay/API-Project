@@ -1,7 +1,7 @@
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const { requireAuth } = require('../../utils/auth');
+const { requireAuth, checkAuth } = require('../../utils/auth');
 const { User, Spot } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -68,12 +68,12 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
     return next(err);
   }
 
-  if (theSpot.ownerId !== currUserId) {
+  if (!checkAuth(currUserId, ownerId)) {
     const err = new Error('Authentication required');
     err.title = 'Authentication required';
     err.errors = { message: 'Authentication required' };
-    err.status = 401;
-    res.status(401);
+    err.status = 403;
+    res.status(403);
     return next(err);
   }
 
@@ -81,5 +81,35 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
 
   res.json(editSpot)
 });
+
+router.post('/:spotId/images', validateSpot, async (req, res , next) => {
+  const {spotId} = req.params;
+  const currUserId = req.user.id;
+
+  let theSpot = await Spot.findByPk(spotId);
+
+  if (!theSpot) {
+    const err = new Error("Spot couldn't be found");
+    err.title = "Spot couldn't be found";
+    err.errors = {
+      message: "Spot couldn't be found"
+    }
+    err.status = 404;
+    return next(err);
+  }
+
+  if (!checkAuth(currUserId, ownerId)) {
+    const err = new Error('Authentication required');
+    err.title = 'Authentication required';
+    err.errors = { message: 'Authentication required' };
+    err.status = 403;
+    res.status(403);
+    return next(err);
+  }
+
+  const addImage = await theSpot.createImage(req.body);
+
+  res.json(addImage);
+})
 
 module.exports = router;
