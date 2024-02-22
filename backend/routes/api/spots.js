@@ -70,7 +70,7 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
     return next(err);
   }
 
-  if (!checkAuth(currUserId, ownerId)) {
+  if (!checkAuth(currUserId, theSpot.ownerId)) {
     const err = new Error('Authorization required');
     err.title = 'Authorization required';
     err.errors = { message: 'Authorization required' };
