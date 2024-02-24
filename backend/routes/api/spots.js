@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { requireAuth, checkAuth } = require('../../utils/auth');
-const { User, Spot } = require('../../db/models');
+const { User, Spot, Review, SpotImage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -117,6 +117,50 @@ router.post('/:spotId/images', checkAuthorization, async (req, res , next) => {
   delete addImage.spotId;
 
   res.json(addImage);
+});
+
+router.get('/:spotId', async (req, res, next) => {
+  const {spotId} = req.params;
+
+  let theSpot = await Spot.findOne({
+    where: {
+      id: spotId
+    },
+    include: [{
+      model: User,
+      as: 'Owner',
+      include: {
+        model: Review,
+      }
+    },
+    {
+      model: SpotImage
+    }
+  ]
+  });
+
+  if (!theSpot) {
+    const err = new Error("Spot couldn't be found");
+    err.title = "Spot couldn't be found";
+    err.errors = {
+      message: "Spot couldn't be found"
+    }
+    err.status = 404;
+    return next(err);
+  }
+
+  theSpot = theSpot.toJSON();
+  let numOfReviews = theSpot['Owner']['Reviews'];
+  theSpot.numReviews = numOfReviews.length;
+  if(!theSpot.numReviews) theSpot.avgStarRating = 0;
+  else{
+   theSpot.avgStarRating = numReviews.reduce((acc, review) => {
+    return acc += review.stars;
+   }, 0)
+  }
+  delete theSpot.Owner.Reviews;
+
+  res.json(theSpot);
 })
 
 module.exports = router;
