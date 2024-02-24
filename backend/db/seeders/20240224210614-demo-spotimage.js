@@ -40,7 +40,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'SpotImages'
-    return queryInterface.bulkdelete(options, {
+    return queryInterface.bulkDelete(options, {
       url: {
         [Op.in]: ['demo-image1','demo-image2', 'user1-image1', 'user1-image2', 'user2-image1']
       }
