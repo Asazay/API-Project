@@ -84,8 +84,8 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
   res.json(editSpot)
 });
 
-router.post('/:spotId/images', checkAuthorization, async (req, res , next) => {
-  const {spotId} = req.params;
+router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
+  const { spotId } = req.params;
   const currUserId = req.user.id;
 
   let theSpot = await Spot.findByPk(spotId);
@@ -105,7 +105,7 @@ router.post('/:spotId/images', checkAuthorization, async (req, res , next) => {
   if (!isAuthorized) {
     const err = new Error('Authorization required');
     err.title = 'Authorization required';
-    err.errors = {message: 'Authorization required'};
+    err.errors = { message: 'Authorization required' };
     err.status = 403;
     return next(err);
   }
@@ -120,29 +120,8 @@ router.post('/:spotId/images', checkAuthorization, async (req, res , next) => {
 });
 
 router.get('/:spotId', async (req, res, next) => {
-  const {spotId} = req.params;
-
-  let theSpot = await Spot.findOne({
-    where: {
-      id: spotId
-    },
-    include: [{
-      model: User,
-      as: 'Owner',
-      attributes: ['id', 'firstName', 'lastName'],
-      include: {
-        model: Review,
-        where: {
-          spotId: spotId
-        }
-      }
-    },
-    {
-      model: SpotImage,
-      attributes: ['id', 'url', 'preview']
-    }
-  ]
-  });
+  const { spotId } = req.params;
+  let theSpot = await Spot.findByPk(spotId);
 
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
@@ -154,17 +133,15 @@ router.get('/:spotId', async (req, res, next) => {
     return next(err);
   }
 
+  let owner = await theSpot.getOwner();
+  let reviews = await Review.findAll({ where: { spotId: spotId, userId: owner.id } });
+  let spotImages = await theSpot.getSpotImages();
+
   theSpot = theSpot.toJSON();
-  let numOfReviews;
-  if(theSpot['Owner']['Reviews']) {numOfReviews = theSpot['Owner']['Reviews'];}
-  theSpot.numReviews = numOfReviews.length;
-  if(!theSpot.numReviews) theSpot.avgStarRating = 0;
-  else{
-   theSpot.avgStarRating = numOfReviews.reduce((acc, review) => {
-    return acc += review.stars;
-   }, 0) / numOfReviews.length
-  }
-  delete theSpot.Owner.Reviews;
+  theSpot.numReviews = reviews.length;
+  if (theSpot.numReviews === 0) theSpot.avgStarRating = 0;
+  else theSpot.avgStarRating = reviews.reduce((acc, review) => { return acc += review.stars }, 0) / reviews.length;
+  theSpot.SpotImages = spotImages;
 
   res.json(theSpot);
 })
