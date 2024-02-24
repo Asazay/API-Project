@@ -32,21 +32,35 @@ module.exports = {
       email: 'user2@user.io',
       username: 'FakeUser2',
       hashedPassword: bcrypt.hashSync('password3')
+    },
+    {
+      firstName: 'Booker',
+      lastName: 'Washington',
+      email: 'booker1@booker.io',
+      username: 'Booker1',
+      hashedPassword: bcrypt.hashSync('booker1')
+    },
+    {
+      firstName: 'Booker',
+      lastName: 'Douglas',
+      email: 'booker2@booker.io',
+      username: 'Booker2',
+      hashedPassword: bcrypt.hashSync('booker2')
+    },
+    {
+      firstName: 'Booker',
+      lastName: 'Reed',
+      email: 'booker3@booker.io',
+      username: 'Booker3',
+      hashedPassword: bcrypt.hashSync('booker3')
     }
    ], {validate: true});
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-
     options.tableName = 'Users';
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2', 'Booker1', 'Booker2', 'Booker3'] }
     }, {});
   }
 };

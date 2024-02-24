@@ -129,12 +129,17 @@ router.get('/:spotId', async (req, res, next) => {
     include: [{
       model: User,
       as: 'Owner',
+      attributes: ['id', 'firstName', 'lastName'],
       include: {
         model: Review,
+        where: {
+          spotId: spotId
+        }
       }
     },
     {
-      model: SpotImage
+      model: SpotImage,
+      attributes: ['id', 'url', 'preview']
     }
   ]
   });
@@ -154,9 +159,9 @@ router.get('/:spotId', async (req, res, next) => {
   theSpot.numReviews = numOfReviews.length;
   if(!theSpot.numReviews) theSpot.avgStarRating = 0;
   else{
-   theSpot.avgStarRating = numReviews.reduce((acc, review) => {
+   theSpot.avgStarRating = numOfReviews.reduce((acc, review) => {
     return acc += review.stars;
-   }, 0)
+   }, 0) / numOfReviews.length
   }
   delete theSpot.Owner.Reviews;
 
