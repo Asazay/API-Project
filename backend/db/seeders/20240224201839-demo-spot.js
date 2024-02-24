@@ -1,5 +1,6 @@
 'use strict';
 const {Spot} = require('../../db/models');
+const {Op} = require('sequelize');
 
 let options = {};
 if(process.env.NODE_ENV === 'production'){
