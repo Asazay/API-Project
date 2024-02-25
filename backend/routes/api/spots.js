@@ -54,6 +54,40 @@ router.post('/', validateSpot, async (req, res, next) => {
   }
 });
 
+router.get('/current', requireAuth, async (req, res, next) => {
+  let allSpots = await Spot.findAll({
+    where: {
+      ownerId: req.user.id
+    },
+    include: [
+      {
+        model: SpotImage,
+        attributes: ['url']
+      }
+    ]
+  });
+
+  let daSpots = [];
+
+  for(let i = 0; i < allSpots.length; i++){
+    let currSpot = allSpots[i].toJSON();
+
+    let count = await Review.count({where: {spotId: currSpot.id}});
+    let totalStars = await Review.sum('stars', {where: {spotId: currSpot.id}});
+
+    if(!count) currSpot.avgRating = null;
+    else currSpot.avgRating = totalStars/count;
+
+    if(!currSpot.SpotImages.length) currSpot.previewImage = null;
+    if(currSpot.SpotImages.length) currSpot.previewImage = currSpot.SpotImages[0].url
+    delete currSpot.SpotImages;
+
+    daSpots.push(currSpot);
+  }
+
+  res.json({ Spots: daSpots });
+});
+
 router.put('/:spotId', validateSpot, async (req, res, next) => {
   const { spotId } = req.params;
   const currUserId = req.user.id;
@@ -159,7 +193,6 @@ router.get('/', async (req, res, next) => {
   let daSpots = [];
 
   for(let i = 0; i < allSpots.length; i++){
-    console.log(allSpots[i].hasOwnProperty('SpotImages'))
     let currSpot = allSpots[i].toJSON();
 
     let count = await Review.count({where: {spotId: currSpot.id}});
@@ -176,6 +209,6 @@ router.get('/', async (req, res, next) => {
   }
 
   res.json({ Spots: daSpots });
-})
+});
 
 module.exports = router;
