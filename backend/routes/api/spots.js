@@ -144,6 +144,38 @@ router.get('/:spotId', async (req, res, next) => {
   theSpot.SpotImages = spotImages;
 
   res.json(theSpot);
+});
+
+router.get('/', async (req, res, next) => {
+  let allSpots = await Spot.findAll({
+    include: [
+      {
+        model: SpotImage,
+        attributes: ['url']
+      }
+    ]
+  });
+
+  let daSpots = [];
+
+  for(let i = 0; i < allSpots.length; i++){
+    console.log(allSpots[i].hasOwnProperty('SpotImages'))
+    let currSpot = allSpots[i].toJSON();
+
+    let count = await Review.count({where: {spotId: currSpot.id}});
+    let totalStars = await Review.sum('stars', {where: {spotId: currSpot.id}});
+
+    if(!count) currSpot.avgRating = null;
+    else currSpot.avgRating = totalStars/count;
+
+    if(!currSpot.SpotImages.length) currSpot.previewImage = null;
+    if(currSpot.SpotImages.length) currSpot.previewImage = currSpot.SpotImages[0].url
+    delete currSpot.SpotImages;
+
+    daSpots.push(currSpot);
+  }
+
+  res.json({ Spots: daSpots });
 })
 
 module.exports = router;
