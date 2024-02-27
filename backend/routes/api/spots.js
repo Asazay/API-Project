@@ -180,6 +180,37 @@ router.get('/:spotId', async (req, res, next) => {
   res.json(theSpot);
 });
 
+router.delete('/:spotId', checkAuthorization, async (req, res, next) => {
+  const {spotId} = req.params;
+
+  let spot = await Spot.findByPk(spotId);
+
+  if(!spot){
+    const err = new Error("Spot couldn't be found");
+    err.title = "Spot not found";
+    err.status = 404;
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  let owner = await spot.getOwner();
+
+  if(!checkAuth(req.user.id, owner.id)){
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.errors = { message: 'Authorization required' };
+    err.status = 403;
+    res.status(403);
+    return next(err);
+  }
+
+  await spot.destroy();
+
+  res.json({
+    message: "Successfully deleted"
+  })
+});
+
 router.get('/', async (req, res, next) => {
   let allSpots = await Spot.findAll({
     include: [
