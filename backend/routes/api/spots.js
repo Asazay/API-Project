@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { requireAuth, checkAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage } = require('../../db/models');
+const { User, Spot, Review, SpotImage, ReviewImage} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -209,6 +209,38 @@ router.delete('/:spotId', checkAuthorization, async (req, res, next) => {
   res.json({
     message: "Successfully deleted"
   })
+});
+
+router.get('/:spotId/reviews', async (req, res, next) => {
+  const {spotId} = req.params;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if(!spot){
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot not found";
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  let allReviewsById = await Review.findAll({
+    where: {
+      spotId: spotId
+    },
+    include: [
+      {
+      model: User,
+      attributes: ['id', 'firstName', 'lastName']
+    },
+    {
+      model: ReviewImage,
+      attributes: ['id', 'url']
+    }
+  ]
+  });
+
+  res.json(allReviewsById);
 });
 
 router.get('/', async (req, res, next) => {
