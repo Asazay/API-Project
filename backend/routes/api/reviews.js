@@ -7,6 +7,16 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const checkAuthorization = [requireAuth, handleValidationErrors];
 
+const checkEditReview = [
+  check('review').exists({checkFalsy: true}).notEmpty()
+  .withMessage("Review text is required"),
+  check('stars').exists({checkFalsy: true}).isInt({
+    min: 1,
+    max: 5
+  }).withMessage("Stars must be an integer from 1 to 5"),
+  checkAuthorization
+]
+
 const router = express.Router();
 
 router.get('/current', checkAuthorization, async (req, res, next) => {
@@ -70,6 +80,33 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
   });
 
   res.json(newRevImg);
-})
+});
+
+router.put('/:reviewId', checkEditReview, async (req, res, next) => {
+  const {reviewId} = req.params;
+
+  let theReview = await Review.findByPk(reviewId);
+
+  if(!theReview){
+    const err = new Error("Review couldn't be found");
+    err.status = 404;
+    err.title = "Couldn't find review";
+    err.message = "Review couldn't be foud";
+    return next(err);
+  }
+
+  if(!checkAuth(req.user.id, theReview.userId)){
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.errors = { message: 'Authorization required' };
+    err.status = 403;
+    res.status(403);
+    return next(err);
+  }
+
+  let updatedReview = await theReview.update(req.body)
+
+  res.json(updatedReview);
+});
 
 module.exports = router;
