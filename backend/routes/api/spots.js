@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { requireAuth, checkAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, ReviewImage} = require('../../db/models');
+const { User, Spot, Review, SpotImage, ReviewImage, Booking} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -254,6 +254,47 @@ router.get('/:spotId/reviews', async (req, res, next) => {
   });
 
   res.json(allReviewsById);
+});
+
+router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
+  const {spotId} = req.params;
+
+  const theSpot = await Spot.findByPk(spotId);
+
+  if(!theSpot){
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot not found";
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  const theOwner = await theSpot.getOwner();
+
+  let theBookings;
+
+  if(req.user.id === theOwner.id){
+    theBookings = await Booking.findAll({
+      where: {
+        spotId: theSpot.id
+      },
+      include: {
+        model: User
+      }
+    });
+
+    res.json(theBookings)
+  }
+
+  else{
+    theBookings = await Booking.findAll({
+      where: {
+        spotId: theSpot.id
+      }
+    });
+
+    res.json(theBookings);
+  }
 });
 
 router.post('/:spotId/reviews', validateReview, async (req, res, next) => {

@@ -20,6 +20,6 @@ router.get('/current', checkAuthorization, async (req, res , next) => {
   });
 
   res.json(userBookings)
-})
+});
 
 module.exports = router;
