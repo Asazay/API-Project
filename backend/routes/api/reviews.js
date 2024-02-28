@@ -99,14 +99,41 @@ router.put('/:reviewId', checkEditReview, async (req, res, next) => {
     const err = new Error('Authorization required');
     err.title = 'Authorization required';
     err.errors = { message: 'Authorization required' };
-    err.status = 403;
-    res.status(403);
+    err.status = 404;
     return next(err);
   }
 
   let updatedReview = await theReview.update(req.body)
 
   res.json(updatedReview);
+});
+
+router.delete('/:reviewId', checkAuthorization, async (req, res, next) => {
+  const {reviewId} = req.params;
+
+  const review = await Review.findByPk(reviewId);
+
+  if(!review){
+    const err = new Error("Review couldn't be found");
+    err.status = 404;
+    err.title = "Couldn't find review";
+    err.message = "Review couldn't be foud";
+    return next(err);
+  }
+
+  if(!checkAuth(req.user.id, review.userId)){
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.errors = { message: 'Authorization required' };
+    err.status = 404;
+    return next(err);
+  }
+
+  await review.destroy();
+
+  res.json({
+    message: "Successfully deleted"
+  });
 });
 
 module.exports = router;
