@@ -99,7 +99,7 @@ router.put('/:reviewId', checkEditReview, async (req, res, next) => {
     const err = new Error('Authorization required');
     err.title = 'Authorization required';
     err.errors = { message: 'Authorization required' };
-    err.status = 404;
+    err.status = 403;
     return next(err);
   }
 
