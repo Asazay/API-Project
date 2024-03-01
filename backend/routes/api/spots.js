@@ -52,6 +52,28 @@ const validateReview = [
   handleValidationErrors,
 ];
 
+const allSpotsQueryVal = [
+  check('page').if(value => value ? true : false).isInt({
+    min: 1,
+    max: 10
+  }).withMessage("Page must be greater than or equal to 1"),
+  check('size').if(value => value ? true : false).isInt({
+    min: 1,
+    max: 20
+  }).withMessage("Size must be greater than or equal to 1"),
+  check('maxLat').optional({ values: null }).isDecimal().withMessage('Maximum latitude is invalid'),
+  check('minLat').optional({ values: null }).isDecimal().withMessage('Minimum latitude is invalid'),
+  check('maxLng').optional({ values: null }).isDecimal().withMessage('Maximum longitude is invalid'),
+  check('minLng').optional({ values: null }).isDecimal().withMessage('Minimum longitude is invalid'),
+  check('minPrice').optional({ values: null }).isDecimal({
+    min: 0
+  }).withMessage('Maximum longitude is invalid'),
+  check('maxPrice').optional({ values: null }).isFloat({
+    min: 0
+  }).withMessage('Maximum longitude is invalid'),
+  handleValidationErrors
+];
+
 const date = new Date();
 const theDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
@@ -77,6 +99,7 @@ const router = express.Router();
 
 router.post('/', validateSpot, async (req, res, next) => {
   const spotOwner = await User.findByPk(req.user.id);
+  const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
   const newSpot = await spotOwner.createSpot(req.body);
 
@@ -441,8 +464,29 @@ router.post('/:spotId/reviews', validateReview, async (req, res, next) => {
   res.json(createReview)
 })
 
-router.get('/', async (req, res, next) => {
+router.get('/', allSpotsQueryVal, async (req, res, next) => {
+  let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+  let where = {};
+
+  if(!page) page = 1;
+  if(!size) size = 20;
+
+  if(minLat && maxLat) where.lat = {[Op.between]: [Number(minLat), Number(maxLat)]}
+  else if(minLat) where.lat = {[Op.gte]: Number(minLat)};
+  else if(maxLat) where.lat = {[Op.lte]: Number(maxLat)};
+
+  if(minLng && maxLng) where.lng = {[Op.between]: [Number(minLng), Number(maxLng)]}
+  else if(minLng) where.lng = {[Op.gte]: Number(minLng)};
+  else if(maxLng) where.lng = {[Op.lte]: Number(maxLng)};
+
+  if(minPrice && maxPrice) where.price = {[Op.between]: [Number(minPrice), Number(maxPrice)]};
+  else if(minPrice) where.price = {[Op.gte]: Number(minPrice)}
+  else if(maxPrice) where.maxPrice = {[Op.lte]: Number(maxPrice)};
+
   let allSpots = await Spot.findAll({
+    where,
+    offset: size * (page - 1),
+    limit: size,
     include: [
       {
         model: SpotImage,
