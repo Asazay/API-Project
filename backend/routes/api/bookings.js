@@ -140,6 +140,44 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   });
 
   res.json(updateBooking);
+});
+
+router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
+  const {bookingId} = req.params;
+  const userId = req.user.id;
+
+  let booking = await Booking.findByPk(bookingId);
+
+  if(!booking){
+    const err = new Error("Booking couldn't be found");
+    err.status = 404;
+    err.title = "Booking not found";
+    err.message = "Booking couldn't be found";
+    return next(err);
+  }
+
+  const spot = await Spot.findByPk(booking.spotId);
+
+  if(!checkAuth(userId, booking.userId) && !checkAuth(userId, spot.userId)){
+    const err = new Error('Authorization required');
+    err.title = 'Authorization required';
+    err.message = 'Authorization required';
+    err.status = 403;
+    return next(err);
+  }
+
+  if(date >= new Date(booking.startDate)){
+    const err = new Error("Bookings that have been started can't be deleted");
+    err.status = 403;
+    err.title = "Can't delete booking";
+    return next(err);
+  }
+
+  await booking.destroy();
+
+  res.json({
+    message: "Successfully deleted"
+  });
 })
 
 module.exports = router;
