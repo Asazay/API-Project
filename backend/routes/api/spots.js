@@ -87,8 +87,8 @@ const validateSpotBooking = [
   check('startDate').custom(async (startDate) => {
     if (new Date(startDate) < new Date(theDate)) throw new Error()
   }).withMessage("startDate cannot be in the past"),
-  check('endDate').custom(async (endDate, { req }) => {
-    if (new Date() <= new Date(req.body.startDate)) throw new Error()
+  check('endDate').custom(async (value, { req }) => {
+    if (new Date(value) <= new Date(req.body.startDate)) throw new Error()
   }).withMessage("endDate cannot be on or before startDate"),
   handleValidationErrors
 ]
@@ -192,9 +192,9 @@ router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
   const isAuthorized = checkAuth(currUserId, theSpot.ownerId);
 
   if (!isAuthorized) {
-    const err = new Error('Forbidden');
+    const err = new Error('Authorization required');
     err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
+    err.errors = { message: 'Authorization required' };
     err.status = 403;
     return next(err);
   }
@@ -405,7 +405,8 @@ router.post('/:spotId/bookings', validateSpotBooking, async (req, res, next) => 
     let requestedEndDate = new Date(endDate);
     requestedEndDate = Date.parse(requestedEndDate);
 
-    if (requestedEndDate >= bookingStartDate && requestedEndDate <= bookingEndDate) {
+    if (requestedEndDate >= bookingStartDate && requestedEndDate <= bookingEndDate
+      || bookingStartDate >= requestedStartDate && bookingStartDate <= requestedEndDate) {
       error.errors.endDate = "End date conflicts with an existing booking";
       break;
     }
@@ -446,7 +447,7 @@ router.post('/:spotId/reviews', validateReview, async (req, res, next) => {
   });
 
   if (reviewExist) {
-    res.status(500)
+    res.status(403)
     return res.json({
       message: "User already has a review for this spot"
     });
