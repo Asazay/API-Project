@@ -53,11 +53,11 @@ const validateReview = [
 ];
 
 const allSpotsQueryVal = [
-  check('page').custom(page => {
+  check('page').if(page => page ? true: false).custom(page => {
     if(typeof Number(page) !== 'number') throw new Error();
     if(page < 1) throw new Error();
   }).withMessage("Page must be greater than or equal to 1"),
-  check('size').custom(size => {
+  check('size').if(page => page ? true: false).custom(size => {
     if(typeof Number(size) !== 'number') throw new Error();
     if(size < 1) throw new Error();
   }).withMessage("Size must be greater than or equal to 1"),
