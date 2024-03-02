@@ -70,10 +70,10 @@ const allSpotsQueryVal = [
   check('minLng').optional({ values: null }).isDecimal().withMessage('Minimum longitude is invalid'),
   check('minPrice').optional({ values: null }).isDecimal({
     min: 0
-  }).withMessage('Minimum price is invalid'),
+  }).withMessage('Minimum price must be greater than or equal to 0'),
   check('maxPrice').optional({ values: null }).isFloat({
     min: 0
-  }).withMessage('Maximum price is invalid'),
+  }).withMessage('Maximum price must be greater than or equal to 0'),
   handleValidationErrors
 ];
 
@@ -488,7 +488,6 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
     where,
     offset: size * (page - 1),
     limit: size,
-    order: ['price'],
     include: [
       {
         model: SpotImage,
