@@ -53,11 +53,14 @@ const validateReview = [
 ];
 
 const allSpotsQueryVal = [
-  check('page').if(async page => page ? true: false).custom(async page => {
+  check('page').if(page => page ? true: false).custom(async page => {
+    page = Number(page);
     if(typeof page !== 'number') throw new Error();
     if(page < 1) throw new Error();
   }).withMessage("Page must be greater than or equal to 1"),
-  check('size').if(async size => size ? true: false).custom(async size => {
+  check('size').if(size => size ? true: false).custom(async size => {
+    size = Number(size);
+    console.log("value: " + size)
     if(typeof size !== 'number') throw new Error();
     if(size < 1) throw new Error();
   }).withMessage("Size must be greater than or equal to 1"),
@@ -67,10 +70,10 @@ const allSpotsQueryVal = [
   check('minLng').optional({ values: null }).isDecimal().withMessage('Minimum longitude is invalid'),
   check('minPrice').optional({ values: null }).isDecimal({
     min: 0
-  }).withMessage('Maximum longitude is invalid'),
+  }).withMessage('Minimum price is invalid'),
   check('maxPrice').optional({ values: null }).isFloat({
     min: 0
-  }).withMessage('Maximum longitude is invalid'),
+  }).withMessage('Maximum price is invalid'),
   handleValidationErrors
 ];
 
@@ -479,18 +482,19 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
 
   if(minPrice && maxPrice) where.price = {[Op.between]: [Number(minPrice), Number(maxPrice)]};
   else if(minPrice) where.price = {[Op.gte]: Number(minPrice)}
-  else if(maxPrice) where.maxPrice = {[Op.lte]: Number(maxPrice)};
+  else if(maxPrice) where.Price = {[Op.lte]: Number(maxPrice)};
 
   let allSpots = await Spot.findAll({
     where,
     offset: size * (page - 1),
     limit: size,
+    order: ['price'],
     include: [
       {
         model: SpotImage,
         attributes: ['url']
       }
-    ]
+    ],
   });
 
   let daSpots = [];
@@ -511,7 +515,7 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
     daSpots.push(currSpot);
   }
 
-  res.json({ Spots: daSpots });
+  res.json({ Spots: daSpots, page: page, size: size});
 });
 
 module.exports = router;
