@@ -109,7 +109,7 @@ router.post('/', validateSpot, async (req, res, next) => {
   }
 });
 
-router.get('/current', requireAuth, async (req, res, next) => {
+router.get('/current', checkAuthorization, async (req, res, next) => {
   let allSpots = await Spot.findAll({
     where: {
       ownerId: req.user.id
