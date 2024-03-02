@@ -56,9 +56,9 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   }
 
   if(!checkAuth(userId, booking.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.message = 'Authorization required';
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -159,9 +159,9 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
   const spot = await Spot.findByPk(booking.spotId);
 
   if(!checkAuth(userId, booking.userId) && !checkAuth(userId, spot.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.message = 'Authorization required';
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }

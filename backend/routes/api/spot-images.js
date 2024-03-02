@@ -36,11 +36,10 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
   theSpot = theSpot.toJSON()
 
   if (!checkAuth(req.user.id, theSpot.Owner.id)) {
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
-    res.status(403);
     return next(err);
   }
 
