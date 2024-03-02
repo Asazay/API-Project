@@ -53,13 +53,13 @@ const validateReview = [
 ];
 
 const allSpotsQueryVal = [
-  check('page').if(value => value ? true : false).isInt({
-    min: 1,
-    max: 10
+  check('page').custom(page => {
+    if(typeof page !== 'number') throw new Error();
+    if(page < 1) throw new Error();
   }).withMessage("Page must be greater than or equal to 1"),
-  check('size').if(value => value ? true : false).isInt({
-    min: 1,
-    max: 20
+  check('size').custom(size => {
+    if(typeof size !== 'number') throw new Error();
+    if(size < 1) throw new Error();
   }).withMessage("Size must be greater than or equal to 1"),
   check('maxLat').optional({ values: null }).isDecimal().withMessage('Maximum latitude is invalid'),
   check('minLat').optional({ values: null }).isDecimal().withMessage('Minimum latitude is invalid'),
@@ -160,9 +160,9 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
   }
 
   if (!checkAuth(currUserId, theSpot.ownerId)) {
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     res.status(403);
     return next(err);
@@ -192,9 +192,9 @@ router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
   const isAuthorized = checkAuth(currUserId, theSpot.ownerId);
 
   if (!isAuthorized) {
-    const err = new Error('Authorization required');
+    const err = new Error('Forbideen');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
