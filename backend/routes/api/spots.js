@@ -251,11 +251,10 @@ router.delete('/:spotId', checkAuthorization, async (req, res, next) => {
   let owner = await spot.getOwner();
 
   if (!checkAuth(req.user.id, owner.id)) {
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
-    res.status(403);
     return next(err);
   }
 
@@ -355,10 +354,10 @@ router.post('/:spotId/bookings', validateSpotBooking, async (req, res, next) => 
   }
 
   if (checkAuth(user, theSpot.ownerId)) {
-    const err = new Error("Spot cannot belong to user");
+    const err = new Error('Forbidden');
+    err.title = 'Spot cannout belong to user';
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
-    err.title = "Cannot book spot";
-    err.message = "Spot must NOT belong to the current user";
     return next(err);
   }
 

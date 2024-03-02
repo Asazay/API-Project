@@ -66,11 +66,10 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
   }
 
   if(!checkAuth(req.user.id, review.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
-    res.status(403);
     return next(err);
   }
 
@@ -96,9 +95,9 @@ router.put('/:reviewId', checkEditReview, async (req, res, next) => {
   }
 
   if(!checkAuth(req.user.id, theReview.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -122,10 +121,10 @@ router.delete('/:reviewId', checkAuthorization, async (req, res, next) => {
   }
 
   if(!checkAuth(req.user.id, review.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
-    err.status = 404;
+    err.errors = { message: 'Forbidden' };
+    err.status = 403;
     return next(err);
   }
 

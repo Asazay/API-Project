@@ -24,9 +24,9 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
   const review = await revImage.getReview();
 
   if(!checkAuth(req.user.id, review.userId)){
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
+    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
