@@ -51,7 +51,7 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
     const err = new Error("Review couldn't be found");
     err.status = 404;
     err.title = "Couldn't find review";
-    err.message = "Review couldn't be foud";
+    err.message = "Review couldn't be found";
     return next(err);
   }
 
