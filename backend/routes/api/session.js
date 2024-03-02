@@ -8,9 +8,9 @@ const {handleValidationErrors} = require('../../utils/validation');
 
 const validateLogin = [
   check('credential').exists({checkFalsy: true})
-  .notEmpty().withMessage('Please provide a valid email or username.'),
+  .notEmpty().withMessage('Email or username is required'),
   check('password').exists({checkFalsy: true})
-  .withMessage('Please provide a password.'),
+  .withMessage('Password is required'),
   handleValidationErrors
 ];
 
@@ -33,7 +33,7 @@ router.post('/', validateLogin, async (req, res, next) => {
     err.status = 401;
     err.title = 'Login failed';
     err.errors = {
-      credential: 'Invalid Credentials'
+      credential: 'Invalid credentials'
     };
 
     return next(err);

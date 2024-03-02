@@ -54,11 +54,11 @@ const validateReview = [
 
 const allSpotsQueryVal = [
   check('page').custom(page => {
-    if(typeof page !== 'number') throw new Error();
+    if(typeof Number(page) !== 'number') throw new Error();
     if(page < 1) throw new Error();
   }).withMessage("Page must be greater than or equal to 1"),
   check('size').custom(size => {
-    if(typeof size !== 'number') throw new Error();
+    if(typeof Number(size) !== 'number') throw new Error();
     if(size < 1) throw new Error();
   }).withMessage("Size must be greater than or equal to 1"),
   check('maxLat').optional({ values: null }).isDecimal().withMessage('Maximum latitude is invalid'),
@@ -99,7 +99,6 @@ const router = express.Router();
 
 router.post('/', validateSpot, async (req, res, next) => {
   const spotOwner = await User.findByPk(req.user.id);
-  const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
   const newSpot = await spotOwner.createSpot(req.body);
 
@@ -192,7 +191,7 @@ router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
   const isAuthorized = checkAuth(currUserId, theSpot.ownerId);
 
   if (!isAuthorized) {
-    const err = new Error('Forbideen');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
     err.errors = { message: 'Forbidden' };
     err.status = 403;
