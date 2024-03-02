@@ -53,13 +53,13 @@ const validateReview = [
 ];
 
 const allSpotsQueryVal = [
-  check('page').if(value => value ? true : false).isInt({
-    min: 1,
-    max: 10
+  check('page').custom(value => {
+    if( typeof value !== 'number') throw new Error()
+    if(value < 1) throw new Error()
   }).withMessage("Page must be greater than or equal to 1"),
-  check('size').if(value => value ? true : false).isInt({
-    min: 1,
-    max: 20
+  check('size').if(value => {
+    if( typeof value !== 'number') throw new Error()
+    if(value < 1) throw new Error()
   }).withMessage("Size must be greater than or equal to 1"),
   check('maxLat').optional({ values: null }).isDecimal().withMessage('Maximum latitude is invalid'),
   check('minLat').optional({ values: null }).isDecimal().withMessage('Minimum latitude is invalid'),
@@ -99,7 +99,6 @@ const router = express.Router();
 
 router.post('/', validateSpot, async (req, res, next) => {
   const spotOwner = await User.findByPk(req.user.id);
-  const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
   const newSpot = await spotOwner.createSpot(req.body);
 
@@ -355,7 +354,7 @@ router.post('/:spotId/bookings', validateSpotBooking, async (req, res, next) => 
 
   if (checkAuth(user, theSpot.ownerId)) {
     const err = new Error('Forbidden');
-    err.title = 'Spot cannout belong to user';
+    err.title = 'Spot cannot belong to user';
     err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
@@ -480,7 +479,7 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
 
   if(minPrice && maxPrice) where.price = {[Op.between]: [Number(minPrice), Number(maxPrice)]};
   else if(minPrice) where.price = {[Op.gte]: Number(minPrice)}
-  else if(maxPrice) where.maxPrice = {[Op.lte]: Number(maxPrice)};
+  else if(maxPrice) where.price = {[Op.lte]: Number(maxPrice)};
 
   let allSpots = await Spot.findAll({
     where,
