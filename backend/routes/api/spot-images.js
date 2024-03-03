@@ -14,9 +14,11 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
   let image = await SpotImage.findByPk(imageId);
 
   if(!image) {
-    let err = new Error("Spot Image couldn't be found");
+    let err = new Error();
     err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Spot Image couldn't be found"
+    });
   }
 
   let theSpot= await Spot.findOne({
@@ -34,9 +36,9 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
   theSpot = theSpot.toJSON()
 
   if (!checkAuth(req.user.id, theSpot.Owner.id)) {
-    const err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   await image.destroy();

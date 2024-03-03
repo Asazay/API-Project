@@ -48,21 +48,21 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   const booking = await Booking.findByPk(bookingId);
 
   if(!booking){
-    const err = new Error("Booking couldn't be found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Booking couldn't be found",
+    });
   }
 
   if(!checkAuth(userId, booking.userId)){
-    const err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   if(Date.parse(new Date()) > new Date(booking.endDate)){
-    const err = new Error("Past booking's can't be modified");
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Past bookings can't be modified"
+    });
   }
 
   const theSpot = await Spot.findByPk(booking.spotId);
@@ -124,7 +124,10 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   }
 
   if (error.errors.startDate || error.errors.endDate) {
-    return next(error);
+    return res.status(403).send({
+      message: "Sorry, this spot is already booked for the specified dates",
+      errors: error.errors
+    });
   }
 
   const updateBooking = await booking.update({
@@ -142,9 +145,9 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
   let booking = await Booking.findByPk(bookingId);
 
   if(!booking){
-    const err = new Error("Booking couldn't be found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Booking couldn't be found",
+    });
   }
 
   const spot = await Spot.findByPk(booking.spotId);
@@ -152,13 +155,15 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
   if(!checkAuth(userId, booking.userId) && !checkAuth(userId, spot.userId)){
     const err = new Error('Forbidden');
     err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   if(date >= new Date(booking.startDate)){
-    const err = new Error("Bookings that have been started can't be deleted");
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Bookings that have been started can't be deleted"
+    });
   }
 
   await booking.destroy();

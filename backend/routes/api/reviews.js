@@ -48,23 +48,23 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
   let review = await Review.findByPk(reviewId);
 
   if(!review){
-    const err = new Error("Review couldn't be found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Review couldn't be found"
+    });
   }
 
   const reviewImages = await review.getReviewImages();
 
   if(reviewImages.length >= 10){
-    const err = new Error("Forbidden");
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   if(!checkAuth(req.user.id, review.userId)){
-    const err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   const newRevImg = await ReviewImage.create({
@@ -81,15 +81,15 @@ router.put('/:reviewId', checkEditReview, async (req, res, next) => {
   let theReview = await Review.findByPk(reviewId);
 
   if(!theReview){
-    const err = new Error("Review couldn't be found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Review couldn't be found"
+    });
   }
 
   if(!checkAuth(req.user.id, theReview.userId)){
-    const err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   let updatedReview = await theReview.update(req.body)
@@ -103,15 +103,15 @@ router.delete('/:reviewId', checkAuthorization, async (req, res, next) => {
   const review = await Review.findByPk(reviewId);
 
   if(!review){
-    const err = new Error("Review couldn't be found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).send({
+      message: "Review couldn't be found"
+    });
   }
 
   if(!checkAuth(req.user.id, review.userId)){
-    const err = new Error('Forbidden');
-    err.status = 403;
-    return next(err);
+    return res.status(403).send({
+      message: "Forbidden"
+    });
   }
 
   await review.destroy();
