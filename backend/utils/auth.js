@@ -60,14 +60,14 @@ const restoreUser = (req, res, next) => {
 };
 
 // If there is no current user, return an error
-const requireAuth = function (req, _res, next) {
+const requireAuth = function (req, res, next) {
   if (req.user) return next();
 
   const err = {
     status: 401,
     message: "Authorization required"
   }
-  return next(err);
+  res.status(err.status).send({message: err.message})
 }
 
 const checkAuth = (userId, ownerId) => {
