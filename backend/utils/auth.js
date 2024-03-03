@@ -67,7 +67,7 @@ const requireAuth = function (req, res, next) {
     status: 401,
     message: "Authorization required"
   }
-  res.status(err.status).send({message: err.message})
+  return res.status(err.status).send({message: err.message})
 }
 
 const checkAuth = (userId, ownerId) => {

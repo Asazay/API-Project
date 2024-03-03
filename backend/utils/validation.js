@@ -8,10 +8,10 @@ const handleValidationErrors = async (req, res, next) => {
 
     validationErrors.array().forEach(error => errors[error.path] = error.msg);
 
-    const err = new Error('Bad request.');
-    err.errors = errors;
-    err.status = 400;
-    next(err);
+    return res.status(400).send({
+      message: 'Bad Request',
+      errors
+    });
   }
 
   next();
@@ -25,11 +25,10 @@ const handleExistsErrors = async (req, res, next) => {
 
     existsErrors.array().forEach(error => errors[error.path] = error.msg);
 
-    const err = new Error('User already exists');
-    err.errors = errors;
-    err.status = 500;
-    err.title = "User already exists";
-    next(err);
+    return res.status(500).send({
+      message: "User already exists",
+      errors
+    })
   }
 
   next();
