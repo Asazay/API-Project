@@ -65,7 +65,7 @@ const requireAuth = function (req, res, next) {
 
   const err = {
     status: 401,
-    message: "Authorization required"
+    message: "Authenticiation required"
   }
   return res.status(err.status).send({message: err.message})
 }
