@@ -55,15 +55,15 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
 
   const reviewImages = await review.getReviewImages();
 
-  if(reviewImages.length >= 10){
-    return res.status(403).send({
-      message: "Maximum number of images for this resource was reached"
-    });
-  }
-
   if(!checkAuth(req.user.id, review.userId)){
     return res.status(403).send({
       message: "Forbidden"
+    });
+  }
+
+  if(reviewImages.length >= 10){
+    return res.status(403).send({
+      message: "Maximum number of images for this resource was reached"
     });
   }
 
