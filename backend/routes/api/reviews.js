@@ -38,7 +38,7 @@ router.get('/current', checkAuthorization, async (req, res, next) => {
     ]
   });
 
-  res.json(allReviews)
+  res.json({Reviews: allReviews})
 });
 
 router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
@@ -50,25 +50,19 @@ router.post('/:reviewId/images', checkAuthorization, async (req, res, next) => {
   if(!review){
     const err = new Error("Review couldn't be found");
     err.status = 404;
-    err.title = "Couldn't find review";
-    err.message = "Review couldn't be foud";
     return next(err);
   }
 
   const reviewImages = await review.getReviewImages();
 
   if(reviewImages.length >= 10){
-    const err = new Error("Maximum number of images for this resource was reached");
+    const err = new Error("Forbidden");
     err.status = 403;
-    err.title = "Maximum number of images reached";
-    err.message = "Maximum number of images for this resource reached";
     return next(err);
   }
 
   if(!checkAuth(req.user.id, review.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -89,15 +83,11 @@ router.put('/:reviewId', checkEditReview, async (req, res, next) => {
   if(!theReview){
     const err = new Error("Review couldn't be found");
     err.status = 404;
-    err.title = "Couldn't find review";
-    err.message = "Review couldn't be foud";
     return next(err);
   }
 
   if(!checkAuth(req.user.id, theReview.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -115,15 +105,11 @@ router.delete('/:reviewId', checkAuthorization, async (req, res, next) => {
   if(!review){
     const err = new Error("Review couldn't be found");
     err.status = 404;
-    err.title = "Couldn't find review";
-    err.message = "Review couldn't be foud";
     return next(err);
   }
 
   if(!checkAuth(req.user.id, review.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }

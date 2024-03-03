@@ -53,27 +53,22 @@ const validateReview = [
 ];
 
 const allSpotsQueryVal = [
-  check('page').if(page => page ? true: false).custom(async page => {
+  check('page').optional({checkFalsy: true}).custom(async page => {
     page = Number(page);
-    if(typeof page !== 'number') throw new Error();
+    if(isNaN(page)) throw new Error()
     if(page < 1) throw new Error();
   }).withMessage("Page must be greater than or equal to 1"),
-  check('size').if(size => size ? true: false).custom(async size => {
+  check('size').optional({checkFalsy: true}).custom(async size => {
     size = Number(size);
-    console.log("value: " + size)
-    if(typeof size !== 'number') throw new Error();
+    if(isNaN(size)) throw new Error()
     if(size < 1) throw new Error();
   }).withMessage("Size must be greater than or equal to 1"),
-  check('maxLat').optional({ values: null }).isDecimal().withMessage('Maximum latitude is invalid'),
-  check('minLat').optional({ values: null }).isDecimal().withMessage('Minimum latitude is invalid'),
-  check('maxLng').optional({ values: null }).isDecimal().withMessage('Maximum longitude is invalid'),
-  check('minLng').optional({ values: null }).isDecimal().withMessage('Minimum longitude is invalid'),
-  check('minPrice').optional({ values: null }).isDecimal({
-    min: 0
-  }).withMessage('Minimum price must be greater than or equal to 0'),
-  check('maxPrice').optional({ values: null }).isFloat({
-    min: 0
-  }).withMessage('Maximum price must be greater than or equal to 0'),
+  check('maxLat').optional({checkFalsy: true}).isDecimal().withMessage('Maximum latitude is invalid'),
+  check('minLat').optional({checkFalsy: true}).isDecimal().withMessage('Minimum latitude is invalid'),
+  check('maxLng').optional({checkFalsy: true}).isDecimal().withMessage('Maximum longitude is invalid'),
+  check('minLng').optional({checkFalsy: true}).isDecimal().withMessage('Minimum longitude is invalid'),
+  check('minPrice').optional({checkFalsy: true}).isFloat({min: 0}).withMessage('Minimum price must be greater than or equal to 0'),
+  check('maxPrice').optional({checkFalsy: true}).isFloat({min: 0}).withMessage('Maximum price must be greater than or equal to 0'),
   handleValidationErrors
 ];
 
@@ -153,20 +148,13 @@ router.put('/:spotId', validateSpot, async (req, res, next) => {
 
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
-    err.title = "Spot couldn't be found";
-    err.errors = {
-      message: "Spot couldn't be found"
-    }
     err.status = 404;
     return next(err);
   }
 
   if (!checkAuth(currUserId, theSpot.ownerId)) {
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
-    res.status(403);
     return next(err);
   }
 
@@ -183,10 +171,6 @@ router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
 
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
-    err.title = "Spot couldn't be found";
-    err.errors = {
-      message: "Spot couldn't be found"
-    }
     err.status = 404;
     return next(err);
   }
@@ -195,8 +179,6 @@ router.post('/:spotId/images', checkAuthorization, async (req, res, next) => {
 
   if (!isAuthorized) {
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -216,10 +198,6 @@ router.get('/:spotId', async (req, res, next) => {
 
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
-    err.title = "Spot couldn't be found";
-    err.errors = {
-      message: "Spot couldn't be found"
-    }
     err.status = 404;
     return next(err);
   }
@@ -244,9 +222,7 @@ router.delete('/:spotId', checkAuthorization, async (req, res, next) => {
 
   if (!spot) {
     const err = new Error("Spot couldn't be found");
-    err.title = "Spot not found";
     err.status = 404;
-    err.message = "Spot couldn't be found";
     return next(err);
   }
 
@@ -254,8 +230,6 @@ router.delete('/:spotId', checkAuthorization, async (req, res, next) => {
 
   if (!checkAuth(req.user.id, owner.id)) {
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -275,8 +249,6 @@ router.get('/:spotId/reviews', async (req, res, next) => {
   if (!spot) {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
-    err.title = "Spot not found";
-    err.message = "Spot couldn't be found";
     return next(err);
   }
 
@@ -296,7 +268,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
     ]
   });
 
-  res.json(allReviewsById);
+  res.json({Reviews: allReviewsById});
 });
 
 router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
@@ -307,8 +279,6 @@ router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
-    err.title = "Spot not found";
-    err.message = "Spot couldn't be found";
     return next(err);
   }
 
@@ -326,7 +296,7 @@ router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
       }
     });
 
-    res.json(theBookings)
+    res.json({Bookings: theBookings})
   }
 
   else {
@@ -350,15 +320,11 @@ router.post('/:spotId/bookings', validateSpotBooking, async (req, res, next) => 
   if (!theSpot) {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
-    err.title = "Spot not found";
-    err.message = "Spot couldn't be found";
     return next(err);
   }
 
   if (checkAuth(user, theSpot.ownerId)) {
     const err = new Error('Forbidden');
-    err.title = 'Spot cannout belong to user';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -366,7 +332,6 @@ router.post('/:spotId/bookings', validateSpotBooking, async (req, res, next) => 
   let spotBookings = await theSpot.getBookings();
 
   let error = new Error("Sorry, this spot is already booked for the specified dates");
-  error.title = "Date(s) conflict with an existing booking";
   error.status = 403;
   error.errors = {};
 
@@ -436,8 +401,6 @@ router.post('/:spotId/reviews', validateReview, async (req, res, next) => {
   if (!spot) {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
-    err.title = "Spot not found";
-    err.message = "Spot couldn't be found";
     return next(err);
   }
 
@@ -482,8 +445,8 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
 
   if(minPrice && maxPrice) where.price = {[Op.between]: [Number(minPrice), Number(maxPrice)]};
   else if(minPrice) where.price = {[Op.gte]: Number(minPrice)}
-  else if(maxPrice) where.Price = {[Op.lte]: Number(maxPrice)};
-
+  else if(maxPrice) where.price = {[Op.lte]: Number(maxPrice)};
+console.log(where)
   let allSpots = await Spot.findAll({
     where,
     offset: size * (page - 1),

@@ -50,15 +50,11 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   if(!booking){
     const err = new Error("Booking couldn't be found");
     err.status = 404;
-    err.title = "Booking not found";
-    err.message = "Booking couldn't be found";
     return next(err);
   }
 
   if(!checkAuth(userId, booking.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -66,8 +62,6 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   if(Date.parse(new Date()) > new Date(booking.endDate)){
     const err = new Error("Past booking's can't be modified");
     err.status = 403;
-    err.title = "Booking can't be modified";
-    err.message = "Past booking can't be modified";
     return next(err);
   }
 
@@ -82,7 +76,6 @@ router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
   });
 
   let error = new Error("Sorry, this spot is already booked for the specified dates");
-  error.title = "Date(s) conflict with an existing booking";
   error.status = 403;
   error.errors = {};
 
@@ -151,8 +144,6 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
   if(!booking){
     const err = new Error("Booking couldn't be found");
     err.status = 404;
-    err.title = "Booking not found";
-    err.message = "Booking couldn't be found";
     return next(err);
   }
 
@@ -160,8 +151,6 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
 
   if(!checkAuth(userId, booking.userId) && !checkAuth(userId, spot.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
@@ -169,7 +158,6 @@ router.delete('/:bookingId', checkAuthorization, async (req, res, next) => {
   if(date >= new Date(booking.startDate)){
     const err = new Error("Bookings that have been started can't be deleted");
     err.status = 403;
-    err.title = "Can't delete booking";
     return next(err);
   }
 

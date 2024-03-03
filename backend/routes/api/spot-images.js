@@ -15,9 +15,7 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
 
   if(!image) {
     let err = new Error("Spot Image couldn't be found");
-    err.title = "Spot Image not found"
     err.status = 404;
-    err.message = "Spot Image couldn't be found";
     return next(err);
   }
 
@@ -37,8 +35,6 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
 
   if (!checkAuth(req.user.id, theSpot.Owner.id)) {
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }

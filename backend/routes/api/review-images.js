@@ -16,7 +16,6 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
 
   if(!revImage){
     const err = new Error("Review Image couldn't be found");
-    err.title = "Review Image not found";
     err.status = 404;
     return next(err);
   }
@@ -25,8 +24,6 @@ router.delete('/:imageId', checkAuthorization, async (req, res, next) => {
 
   if(!checkAuth(req.user.id, review.userId)){
     const err = new Error('Forbidden');
-    err.title = 'Authorization required';
-    err.errors = { message: 'Forbidden' };
     err.status = 403;
     return next(err);
   }
