@@ -10,6 +10,10 @@ const reviewImagesRouter = require('./review-images.js');
 const { restoreUser } = require('../../utils/auth.js');
 
 router.use(restoreUser);
+router.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(err.status).send({message: err.message})
+})
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/spots', spotsRouter)
