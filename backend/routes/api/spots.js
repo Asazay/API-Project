@@ -310,7 +310,7 @@ router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
       }
     });
 
-    res.json(theBookings);
+    res.json({Bookings: theBookings});
   }
 });
 
