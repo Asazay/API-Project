@@ -211,7 +211,11 @@ router.get('/:spotId', async (req, res, next) => {
   if (theSpot.numReviews === 0) theSpot.avgStarRating = 0;
   else theSpot.avgStarRating = reviews.reduce((acc, review) => { return acc += review.stars }, 0) / reviews.length;
   theSpot.SpotImages = spotImages;
-
+  theSpot.Owner = {
+    id: owner.id,
+    firstName: owner.firstName,
+    lastName: owner.lastName
+  }
   res.json(theSpot);
 });
 
