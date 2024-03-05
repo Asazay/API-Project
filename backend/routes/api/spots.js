@@ -307,7 +307,8 @@ router.get('/:spotId/bookings', checkAuthorization, async (req, res, next) => {
     theBookings = await Booking.findAll({
       where: {
         spotId: theSpot.id
-      }
+      },
+      attributes: ['spotId', 'startDate', 'endDate']
     });
 
     res.json({Bookings: theBookings});
