@@ -37,7 +37,7 @@ router.get('/current', checkAuthorization, async (req, res , next) => {
     }
   });
 
-  res.json(userBookings)
+  res.json({Bookings: userBookings})
 });
 
 router.put('/:bookingId', validateSpotBooking, async (req, res, next) => {
