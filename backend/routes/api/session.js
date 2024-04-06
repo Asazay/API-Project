@@ -18,7 +18,6 @@ const router = express.Router();
 
 router.post('/', validateLogin, async (req, res, next) => {
   const {credential, password} = req.body;
-
   const theUser = await User.unscoped().findOne({
     where: {
       [Op.or]: {
@@ -31,7 +30,7 @@ router.post('/', validateLogin, async (req, res, next) => {
   if(!theUser || !bcrypt.compareSync(password, theUser.hashedPassword.toString())){
     const err = new Error('Invalid credentials');
     err.status = 401;
-    res.status(err.status).send({message: err.message})
+    return res.status(err.status).send({message: err.message})
   }
 
   const safeUser = {
