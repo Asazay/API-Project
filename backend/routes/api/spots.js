@@ -454,7 +454,7 @@ router.get('/', allSpotsQueryVal, async (req, res, next) => {
   if(minPrice && maxPrice) where.price = {[Op.between]: [Number(minPrice), Number(maxPrice)]};
   else if(minPrice) where.price = {[Op.gte]: Number(minPrice)}
   else if(maxPrice) where.price = {[Op.lte]: Number(maxPrice)};
-console.log(where)
+
   let allSpots = await Spot.findAll({
     where,
     offset: size * (page - 1),
