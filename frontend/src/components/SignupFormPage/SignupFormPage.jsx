@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./SignUpForm.css";
 import { Navigate } from "react-router-dom";
 
-const SignUpFormPage = () => {
+const SignupFormPage = () => {
   const sessionUser = useSelector((state) => state.session.user);
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -108,4 +108,4 @@ const SignUpFormPage = () => {
   );
 };
 
-export default SignUpFormPage;
+export default SignupFormPage;
