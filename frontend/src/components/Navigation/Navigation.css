@@ -1,16 +1,18 @@
+
+
 .hidden{
-    visibility: hidden;
+    display: none;
 }
 
 li{
     list-style-type: none;
 }
 
-#SignUp:hover {
+/* #SignUp:hover {
     text-decoration: underline;
     cursor: pointer;
 }
 #LogIn:hover {
     text-decoration: underline;
     cursor: pointer;
-}
+} */

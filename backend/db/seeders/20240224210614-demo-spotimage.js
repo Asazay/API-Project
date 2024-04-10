@@ -12,27 +12,32 @@ module.exports = {
    await SpotImage.bulkCreate([
     {
       spotId: 1,
-      url: 'demo-image1',
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house1.jpg',
       preview: true
     },
     {
       spotId: 2,
-      url: 'demo-image2',
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house2.png',
       preview: true
     },
     {
       spotId: 3,
-      url: 'user1-image1',
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house3.jpg',
       preview: true
     },
     {
       spotId: 4,
-      url: 'user1-image2',
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house4.jpg',
+      preview: true
+    },
+    {
+      spotId: 5,
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house6.jpg',
       preview: true
     },
     {
       spotId: 6,
-      url: 'user2-image1',
+      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house5.jpg',
       preview: true
     }
    ])

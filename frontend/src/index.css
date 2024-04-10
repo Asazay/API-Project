@@ -1,1 +1,64 @@
 /* TODO: Add sitewide styles */
+html {
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 1fr 3fr;
+  grid-template-areas: "nav", "mainBody";
+  width: auto;
+  margin: 0px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#navBar {
+  grid-area: nav;
+  border-bottom: solid lightgrey 2px;
+  margin: 0%;
+  display: grid;
+  grid-template-columns: 2;
+  grid-template-rows: 1;
+  grid-template-areas: "logo menu";
+  position: relative;
+}
+
+#thebnblogo {
+  width: fit-content;
+  height: fit-content;
+  border: blue solid 2px;
+  grid-area: logo;
+  justify-self: left;
+  align-self: center;
+}
+
+#menuBtn {
+  width: fit-content;
+  height: fit-content;
+  border: blue solid 2px;
+  grid-area: menu;
+  justify-self: right;
+  align-self: center;
+  position: static;
+}
+
+body {
+  border: pink solid 3px;
+  margin: 0;
+}
+
+a:hover,
+button:hover,
+li#LogIn,
+li#SignUp {
+  cursor: pointer;
+}
+
+li:hover {
+  text-decoration: underline;
+}
+
+a{
+    text-decoration: none;
+}
+
+p{
+    color: black;
+}

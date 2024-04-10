@@ -7,16 +7,16 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
+    <div id='navBar'>
+      <div id='thebnblogo'>
+        <NavLink to="/"><img width={100} height={50} src='https://asazaybucket.s3.us-east-2.amazonaws.com/thebnblogo.png'/></NavLink>
+      </div>
       {isLoaded && (
-        <li>
+        <div id='menuBtn'>
           <ProfileButton user={sessionUser} />
-        </li>
+        </div>
       )}
-    </ul>
+    </div>
   );
 }
 
