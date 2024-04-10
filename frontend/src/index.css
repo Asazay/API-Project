@@ -18,12 +18,12 @@ html {
   grid-template-rows: 1;
   grid-template-areas: "logo menu";
   position: relative;
+  padding: 10px;
 }
 
 #thebnblogo {
   width: fit-content;
   height: fit-content;
-  border: blue solid 2px;
   grid-area: logo;
   justify-self: left;
   align-self: center;
@@ -32,11 +32,9 @@ html {
 #menuBtn {
   width: fit-content;
   height: fit-content;
-  border: blue solid 2px;
   grid-area: menu;
   justify-self: right;
   align-self: center;
-  position: static;
 }
 
 body {

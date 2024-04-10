@@ -127,7 +127,7 @@ router.get('/current', checkAuthorization, async (req, res, next) => {
     let count = await Review.count({ where: { spotId: currSpot.id } });
     let totalStars = await Review.sum('stars', { where: { spotId: currSpot.id } });
 
-    if (!count) currSpot.avgRating = null;
+    if (!count) currSpot.avgRating = 0.0;
     else currSpot.avgRating = totalStars / count;
 
     if (!currSpot.SpotImages.length) currSpot.previewImage = null;
