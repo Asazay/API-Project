@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { FaUserCircle } from 'react-icons/fa';
-import * as sessionActions from '../../store/session';
-import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal/LoginFormModal';
-import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { FaUserCircle } from "react-icons/fa";
+import * as sessionActions from "../../store/session";
+import OpenModalMenuItem from "./OpenModalMenuItem";
+import LoginFormModal from "../LoginFormModal/LoginFormModal";
+import SignupFormModal from "../SignupFormModal/SignupFormModal";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ function ProfileButton({ user }) {
       }
     };
 
-    document.addEventListener('click', closeMenu);
+    document.addEventListener("click", closeMenu);
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
@@ -41,9 +41,9 @@ function ProfileButton({ user }) {
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   const demoUser = {
-    credential: 'Demo-lition',
-    password: 'password'
-  }
+    credential: "Demo-lition",
+    password: "password",
+  };
 
   return (
     <>
@@ -54,7 +54,9 @@ function ProfileButton({ user }) {
         {user ? (
           <>
             <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>
+              {user.firstName} {user.lastName}
+            </li>
             <li>{user.email}</li>
             <li>
               <button onClick={logout}>Log Out</button>
@@ -62,7 +64,9 @@ function ProfileButton({ user }) {
           </>
         ) : (
           <>
-          <button onClick={() => dispatch(sessionActions.login(demoUser))}>Demo Login</button>
+            <button onClick={() => dispatch(sessionActions.login(demoUser))}>
+              Demo Login
+            </button>
             <OpenModalMenuItem
               itemText="Log In"
               onItemClick={closeMenu}
