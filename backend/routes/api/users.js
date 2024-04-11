@@ -18,7 +18,7 @@ const validateSignup = [
   .withMessage('First name is required'),
   check('lastName').exists({checkFalsy: true})
   .withMessage('Last name is required'),
-  handleValidationErrors,
+  
   check('email').custom(async value => {
     let itExists = await User.findOne({where:{email:value}});
     if(itExists) throw new Error('User with that email already exists');
@@ -27,6 +27,7 @@ const validateSignup = [
     let itExists = await User.findOne({where:{username:value}});
     if(itExists) throw new Error('User with that username already exists');
   }).withMessage('User with that username already exists'),
+  handleValidationErrors,
   handleExistsErrors
 ];
 

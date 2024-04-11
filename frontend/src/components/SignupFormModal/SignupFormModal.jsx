@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import * as sessionActions from '../../store/session';
-import './SignupForm.css';
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
+import * as sessionActions from "../../store/session";
+import "./SignupForm.css";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
@@ -13,103 +13,127 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+  const [disable, setDisable] = useState();
+  const { closeModal, setOnModalClose } = useModal();
+
+  useEffect(() => {
+    if (
+      !email.length ||
+      !username.length ||
+      !firstName.length ||
+      !lastName.length ||
+      !password.length ||
+      !confirmPassword.length ||
+      username.length < 4 ||
+      password.length < 6
+    ) {
+      setDisable(true);
+    } else setDisable(false);
+  }, [email, username, firstName, lastName, password, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data?.errors) {
-            setErrors(data.errors);
-          }
-        });
-    }
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
+    setErrors({});
+    return dispatch(
+      sessionActions.signUp({
+        email,
+        username,
+        firstName,
+        lastName,
+        password,
+      })
+    )
+      .then(() => {setOnModalClose(window.location.reload()); closeModal()})
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data?.errors) {
+          if(password !== confirmPassword) data.errors.confirmPassword = "Confirm password must match password"
+          setErrors(data.errors);
+        }
+      });
   };
 
   return (
-    <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
+    <div id="signupModal">
+      <form id="signupForm" onSubmit={handleSubmit}>
+        <h1>Sign Up</h1>
+        <div className="fieldOpt">
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email..."
             required
           />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
+          {errors.email && <p>{errors.email}</p>}
+        </div>
+        <div className="fieldOpt">
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter a username..."
             required
           />
-        </label>
-        {errors.username && <p>{errors.username}</p>}
-        <label>
-          First Name
+          {errors.username && <p>{errors.username}</p>}
+        </div>
+        <div className="fieldOpt">
+          <label htmlFor="firstName">First Name:</label>
           <input
             type="text"
+            id="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Enter your first name..."
             required
           />
-        </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
+          {errors.firstName && <p>{errors.firstName}</p>}
+        </div>
+        <div className="fieldOpt">
+          <label htmlFor="lastName">Last Name:</label>
           <input
             type="text"
+            id="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            placeholder="Enter your last name..."
             required
           />
-        </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
+          {errors.lastName && <p>{errors.lastName}</p>}
+        </div>
+        <div className="fieldOpt">
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter a password..."
             required
           />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
+          {errors.password && <p>{errors.password}</p>}
+        </div>
+        <div className="fieldOpt">
+          <label htmlFor="confirmPassword">Confirm Password:</label>
           <input
             type="password"
+            id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm password..."
             required
           />
-        </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
-        <button type="submit">Sign Up</button>
+        </div>
+        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+        <button disabled={disable} type="submit">
+          Sign Up
+        </button>
       </form>
-    </>
+    </div>
   );
 }
 

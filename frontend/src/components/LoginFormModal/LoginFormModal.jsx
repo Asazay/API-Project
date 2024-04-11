@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import * as sessionActions from '../../store/session';
-import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import './LoginForm.css';
+import { useEffect, useState } from "react";
+import * as sessionActions from "../../store/session";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
+import "./LoginForm.css";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [disable, setDisable] = useState(true);
   const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
@@ -18,40 +19,64 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
+        if (data && data.message) {
+          setErrors({credential: 'The provided credentials were invalid'});
         }
       });
   };
 
+  useEffect(() => {
+    setErrors({});
+    if(credential.length < 4 || password.length < 6) setDisable(true)
+    else setDisable(false);
+  }, [credential, password]);
+
+  const demoUser = {
+    credential: "Demo-lition",
+    password: "password",
+  };
+
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
+    <div id="loginModal">
+      <form id="loginForm" onSubmit={handleSubmit}>
+        <h1>Log In</h1>
+        <div className="fieldOpt">
+          <label>
+            Username/Email:
+          </label>
           <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
+              type="text"
+              value={credential}
+              onChange={(e) => setCredential(e.target.value)}
+              required
+            />
+        </div>
+        <div className="fieldOpt">
+          <label>
+            Password:
+          </label>
           <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && (
-          <p>{errors.credential}</p>
-        )}
-        <button type="submit">Log In</button>
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+        </div>
+        {errors.credential && <p>{errors.credential}</p>}
+        <div className="fieldOpt">
+        <button disabled={disable} type="submit">Log In</button>
+        </div>
+        <div className="fieldOpt">
+        <button onClick={() => {
+          setCredential(demoUser.credential);
+          setPassword(demoUser.password);
+          dispatch(sessionActions.login(demoUser))
+        }}>
+              Demo Login
+            </button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 
