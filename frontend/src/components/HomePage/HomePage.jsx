@@ -8,14 +8,13 @@ import './HomePage.css';
 const HomePage = () => {
     const spots = useSelector(state => state.spotData.spots);
     const dispatch = useDispatch();
-    // const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(loadSpotsThunk()).catch(async (res) => {
             const data = res.json();
             if(data && data.errors) console.log(data.errors)
         })
-    }, [dispatch])
+    }, [dispatch]);
     
     return (
         <div id='spotContent'>

@@ -1,6 +1,7 @@
 // frontend/src/store/session.js
 
 import { csrfFetch } from './csrf';
+import {createSelector} from 'reselect';
 
 // User const's
 const SET_USER = "session/setUser";
@@ -56,8 +57,12 @@ export const signUp = (user) => async (dispatch) => {
     body: JSON.stringify(user)
   })
 
-  const data = await res.json();
-  dispatch(setUser(data))
+  if(res.ok){
+    const data = await res.json();
+  dispatch(setUser(data));
+  return data;
+  }
+  
   return res;
 }
 
@@ -70,7 +75,9 @@ export const restoreUser = () => async (dispatch) => {
 };
 
 //selectors
-export const getUser = (state) => state.session.user;
+const getUser = (state) => state.session.user;
+export const selectGetUser = createSelector(getUser, (user) => user);
+
 
 //Reducers
 const initialState = { user: null };
