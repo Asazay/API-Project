@@ -16,7 +16,6 @@ const SpotDetails = () => {
       return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
     });
   }
-  console.log(reviews)
 
   const dispatch = useDispatch();
 
@@ -78,20 +77,19 @@ const SpotDetails = () => {
 
   // Page Content
   if (spot && reviews) {
-   
     return (
       <div id={`spotDetails`}>
         <h2>{spot.name}</h2>
         <h4>{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
         <div id="spotImgs">
           <div id="mainSpotImg">
-            <img src={spot.SpotImages[0].url} />
+            {spot.SpotImages &&<img src={spot.SpotImages[0].url} />}
           </div>
           <div id="additionalSpotImgs">
             <div className="additionalImg">
               <img
                 src={
-                  spot.SpotImages[1]
+                  spot.SpotImages && spot.SpotImages[1]
                     ? spot.SpotImages[1].url
                     : "https://asazaybucket.s3.us-east-2.amazonaws.com/imgPlaceholder.jpg"
                 }
@@ -100,7 +98,7 @@ const SpotDetails = () => {
             <div className="additionalImg">
               <img
                 src={
-                  spot.SpotImages[2]
+                  spot.SpotImages && spot.SpotImages[2]
                     ? spot.SpotImages[2].url
                     : "https://asazaybucket.s3.us-east-2.amazonaws.com/imgPlaceholder.jpg"
                 }
@@ -109,7 +107,7 @@ const SpotDetails = () => {
             <div className="additionalImg">
               <img
                 src={
-                  spot.SpotImages[3]
+                  spot.SpotImages && spot.SpotImages[3]
                     ? spot.SpotImages[3].url
                     : "https://asazaybucket.s3.us-east-2.amazonaws.com/imgPlaceholder.jpg"
                 }
@@ -118,7 +116,7 @@ const SpotDetails = () => {
             <div className="additionalImg">
               <img
                 src={
-                  spot.SpotImages[4]
+                  spot.SpotImages && spot.SpotImages[4]
                     ? spot.SpotImages[4].url
                     : "https://asazaybucket.s3.us-east-2.amazonaws.com/imgPlaceholder.jpg"
                 }
