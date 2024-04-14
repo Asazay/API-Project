@@ -8,6 +8,9 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const validateSpot = [
   requireAuth,
+  check('errors').not().exists().withMessage('Image validation errors exists'),
+  check('name').exists({checkFalsy: true}).notEmpty()
+  .withMessage('Name is required'),
   check('address').exists({ checkFalsy: true }).notEmpty()
     .withMessage('Street address is required'),
   check('city').exists({ checkFalsy: true }).notEmpty()
@@ -97,7 +100,7 @@ const router = express.Router();
 
 router.post('/', validateSpot, async (req, res, next) => {
   const spotOwner = await User.findByPk(req.user.id);
-
+console.log(req.body)
   const newSpot = await spotOwner.createSpot(req.body);
 
   if (newSpot) {

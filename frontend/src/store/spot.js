@@ -1,7 +1,7 @@
 import { csrfFetch } from './csrf';
 
 // Spot
-// const CREATE_SPOT = "session/createSpot";
+const CREATE_SPOT = "session/createSpot";
 const GET_SPOT = "session/getSpot";
 // const UPDATE_SPOT = "session/updateSpot";
 // const DELETE_SPOT = "session/deleteSpot"
@@ -18,6 +18,13 @@ const loadSpots = (spots) => {
 const getSpot = (spot) => {
     return {
         type: GET_SPOT,
+        payload: spot
+    }
+};
+
+const createSpot = (spot) => {
+    return {
+        type: CREATE_SPOT,
         payload: spot
     }
 };
@@ -41,6 +48,44 @@ export const getSpotThunk = (spotId) => async dispatch => {
     return res;
 }
 
+export const createSpotThunk = (spot, valErrors, images) => async dispatch => {
+    let res;
+
+    if(Object.keys(valErrors).length > 0){
+        res = await csrfFetch('/api/spots', {
+            method: 'POST',
+            headers:{
+               'errors': JSON.stringify(valErrors)
+            },
+            body: JSON.stringify(spot),
+        });
+    }
+    else {
+        res = await csrfFetch('/api/spots', {
+            method: 'POST',
+            body: JSON.stringify(spot),
+        });
+    }
+
+    if(res.ok){
+        const data = await res.json()
+        dispatch(createSpot(data));
+
+        Object.values(images).forEach(async img => {
+            await csrfFetch(`/api/spots/${data.id}/images`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    url: img
+                })
+            });
+        })
+
+        console.log(data)
+    }
+
+    return res;
+}
+
 // Selectors
 // const getSpots = state => state.spots.spots;
 
@@ -58,6 +103,10 @@ const spotReducer = (state = initialState, action) => {
         }
 
         case GET_SPOT: {
+            return {...state, spot: action.payload}
+        }
+
+        case CREATE_SPOT:{
             return {...state, spot: action.payload}
         }
 

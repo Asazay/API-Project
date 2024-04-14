@@ -74,7 +74,8 @@
     grid-template-rows: 1;
     grid-auto-flow: column;
     grid-gap: 10px;
-    text-wrap: wrap;
+    text-wrap: nowrap;
+    margin: 0 10px;
 }
 
 #reserveBtn button{

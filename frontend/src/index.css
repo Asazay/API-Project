@@ -37,6 +37,8 @@
     grid-area: menu;
     justify-self: right;
     align-self: center;
+    position: absolute;
+    right: 50px;
   }
 
   #loginForm, #signupForm{
@@ -64,7 +66,7 @@
   }
 
   body {
-    border: pink solid 3px;
+    border: dotted lightgray 1px;
     margin: 0;
   }
 
@@ -75,8 +77,8 @@
     cursor: pointer;
   }
 
-  li#LogIn, li#SignUp:hover {
-    text-decoration: underline;
+  li#LogIn:hover, li#SignUp:hover {
+    color: lightseagreen;
   }
 
   a {

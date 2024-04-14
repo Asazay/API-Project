@@ -7,9 +7,17 @@ import { loadReviewsThunk } from "../../store/review";
 import { selectReviewsArray } from "../../store/review";
 
 const SpotDetails = () => {
+  const sessionUser = useSelector(state => state.session.user)
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spotData.spot);
-  const reviews = useSelector(selectReviewsArray);
+  let reviews = useSelector(selectReviewsArray);
+  if(reviews.Reviews){
+    reviews = reviews.Reviews.sort(review => {
+      return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
+    });
+  }
+  console.log(reviews)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,8 +37,48 @@ const SpotDetails = () => {
     alert("Feature Coming Soon...")
   }
 
+  const checkLoggedInForSpotReviews = () => {
+    if(sessionUser && sessionUser.id !== spot.Owner.id && !reviews.length){
+      return (<h2>Be the first to post a review!</h2>)
+    }
+    else return (<div id="spotReviewDiv">
+    <div>
+      <h2>
+        <div style={{ display: "inline" }}>
+          {" "}
+          ⭐{spot.avgStarRating
+            ? spot.avgStarRating.toFixed(1)
+            : "New"}{" "}
+        </div>
+        {spot.numReviews > 0 && 
+        <div style={{ display: "inline" }}>
+          • {" "} {spot.numReviews}  {spot.numReviews > 1 ? "reviews" : "review"}
+        </div>}
+      </h2>
+    </div>
+    <div id="reviews">
+      {reviews.map((review) => {
+        const date = new Date(review.createdAt);
+        const month = date.toLocaleString("default", { month: "long" });
+        const year = date.getFullYear();
+
+        return (
+          <div key={review.id} id="review">
+            <div style={{fontWeight: 'bold'}}>{review.User.firstName}</div>
+            <p style={{ color: "gray" }}>
+              {month} {year}
+            </p>
+            <p>{review.review}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>)
+  }
+
+  // Page Content
   if (spot && reviews) {
-    console.log(reviews.Reviews);
+   
     return (
       <div id={`spotDetails`}>
         <h2>{spot.name}</h2>
@@ -89,8 +137,8 @@ const SpotDetails = () => {
             <div id="price-reviews">
               <div>
                 <p>
-                  <span style={{ fontWeight: "bold" }}>${spot.price}</span>{" "}
-                  night -
+                  <span style={{ fontWeight: "bold"}}>${spot.price}</span>{" "}
+                  night
                 </p>
               </div>
               <div>
@@ -110,41 +158,8 @@ const SpotDetails = () => {
             </div>
           </div>
         </div>
-        <div id="spotReviewDiv">
-          <div>
-            <h2>
-              <div style={{ display: "inline" }}>
-                {" "}
-                ⭐{spot.avgStarRating
-                  ? spot.avgStarRating.toFixed(1)
-                  : "New"}{" "}
-              </div>
-              {spot.numReviews > 0 && 
-              <div style={{ display: "inline" }}>
-                • {" "} {spot.numReviews}  {spot.numReviews > 1 ? "reviews" : "review"}
-              </div>}
-            </h2>
-          </div>
-          <div id="reviews">
-            {reviews.Reviews.map((review) => {
-              const date = new Date(review.createdAt);
-              const month = date.toLocaleString("default", { month: "long" });
-              const year = date.getFullYear();
-
-              return (
-                <div id="review">
-                  <div style={{fontWeight: 'bold'}}>{review.User.firstName}</div>
-                  <p style={{ color: "gray" }}>
-                    {month} {year}
-                  </p>
-                  <p>{review.review}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {checkLoggedInForSpotReviews()}   
       </div>
-      // <>Spot details: XD </>
     );
   }
 };
