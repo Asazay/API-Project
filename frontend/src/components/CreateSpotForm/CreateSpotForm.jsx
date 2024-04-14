@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createSpotThunk } from "../../store/spot";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import {useNavigate} from 'react-router-dom'
 
 import "./CreateSpot.css";
@@ -21,7 +21,7 @@ const CreateSpotForm = () => {
   const [photo4, setPhoto4] = useState("");
   const [photo5, setPhoto5] = useState("");
   const [errors, setErrors] = useState({});
-  const spot = useSelector(state => state.spotData.spot);
+  // const spot = useSelector(state => state.spotData.spot);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -76,13 +76,16 @@ const CreateSpotForm = () => {
     if(!latitude) spotInfo.lat = 0;
     if(!longitude) spotInfo.lng = 0;
 
-      return dispatch(createSpotThunk(spotInfo, newErrors, images)).then(() => navigate(`/spots/${spot.id}`)).catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors){
-          setErrors({...data.errors, ...newErrors});
-        }
-        else setErrors({...errors})
+      return dispatch(createSpotThunk(spotInfo, newErrors, images)).then(spotData => navigate(`/spots/${spotData.id}`)).catch(async (res) => {
+        // const data = await res.json();
+        // if (data && data.errors){
+        //   setErrors({...data.errors, ...newErrors});
+        // }
+        // else setErrors({...errors})
+        console.log(res)
       });
+
+     
   };
 
   return (
