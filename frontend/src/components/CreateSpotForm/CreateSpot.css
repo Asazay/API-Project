@@ -1,0 +1,58 @@
+* {
+    box-sizing: border-box;
+}
+
+#createSpotPage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid gold 3px;
+    width: 100%;
+    height: 100%;
+}
+
+#createSpotForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: min-content;
+    border: solid black 2px;
+    padding: 0 20px;
+    margin: 20px;
+    height: fit-content;
+}
+
+#createSpotForm div{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+    width: 50vw;
+    padding: 5px;
+}
+
+#createSpotForm p{
+    margin-top: -10px;
+}
+#createSpotForm button{
+    width: 50%;
+    align-self: center;
+}
+
+#fieldOpt{
+    display: grid;
+    grid-template-columns: repeat(2, 30% 40%);
+    grid-gap: 0;
+}
+
+caption{
+    text-align: left;
+    padding-bottom: 5px;
+}
+
+span{
+    padding-left: 5px;
+    color: red;
+    text-wrap: nowrap;
+}
