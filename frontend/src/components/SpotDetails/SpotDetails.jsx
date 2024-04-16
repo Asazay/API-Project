@@ -9,8 +9,10 @@ import { selectReviewsArray } from "../../store/review";
 const SpotDetails = () => {
   const sessionUser = useSelector(state => state.session.user)
   const { spotId } = useParams();
-  const spot = useSelector((state) => state.spotData.spot);
+  const spot = useSelector((state) => state.spotReducer.spot);
+  console.log(spot)
   let reviews = useSelector(selectReviewsArray);
+
   if(reviews.Reviews){
     reviews = reviews.Reviews.sort(review => {
       return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
@@ -56,7 +58,7 @@ const SpotDetails = () => {
       </h2>
     </div>
     <div id="reviews">
-      {reviews.map((review) => {
+      {reviews?.map((review) => {
         const date = new Date(review.createdAt);
         const month = date.toLocaleString("default", { month: "long" });
         const year = date.getFullYear();
@@ -76,7 +78,7 @@ const SpotDetails = () => {
   }
 
   // Page Content
-  if (spot && reviews) {
+  if (spot && Object.keys(spot).length === 17 && reviews) {
     return (
       <div id={`spotDetails`}>
         <h2>{spot.name}</h2>
@@ -127,9 +129,9 @@ const SpotDetails = () => {
         <div id="infoContent">
           <div id="hostedBy">
             <h3>
-              Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}
+              {spot.Owner.firstName && spot.Owner.lastName && <>Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}</>}
             </h3>
-            <p>{spot.description}</p>
+            {spot.description && <p>{spot.description}</p>}
           </div>
           <div id="reserveModule">
             <div id="price-reviews">

@@ -1,4 +1,5 @@
 import { csrfFetch } from "./csrf";
+// import {createSelector} from 'reselect';
 
 // Spot
 const CREATE_SPOT = "session/createSpot";
@@ -89,7 +90,9 @@ export const createSpotThunk =
   };
 
 // Selectors
-// const getSpots = state => state.spots.spots;
+// const getSpots = state => state.spotReducer.spots;
+// export const selectAllSpots = createSelector(getSpots, spots => spots);
+
 
 // Reducer
 const initialState = {};

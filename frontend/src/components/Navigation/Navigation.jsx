@@ -20,7 +20,7 @@ function Navigation({ isLoaded }) {
       </div>
       
       {isLoaded && sessionUser && (
-        <div>
+        <div id='createSpotBtn'>
           <button onClick={handleClickCSB}>Create a Spot</button>
         </div>
       )}

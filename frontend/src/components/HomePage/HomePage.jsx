@@ -1,12 +1,16 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 // import {useNavigate} from 'react-router-dom';
+// import { selectAllSpots } from '../../store/spot';
 import SpotPageItem from './SpotPageItem';
 import { loadSpotsThunk } from '../../store/spot';
+
 import './HomePage.css';
 
 const HomePage = () => {
-    const spots = useSelector(state => state.spotData.spots);
+    let spots = useSelector(state => state.spotReducer.spots);
+    // spots ? spots.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) : {}
+    console.log(spots)
     const dispatch = useDispatch();
 
     useEffect(() => {

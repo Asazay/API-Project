@@ -40,6 +40,12 @@ li{
     width: 100%;
 }
 
+#createSpotBtn{
+    position: absolute;
+    right: 130px;
+    top:25px;
+}
+
 
 /* #SignUp:hover {
     text-decoration: underline;
