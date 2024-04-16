@@ -44,7 +44,7 @@ const CreateSpotForm = () => {
       jpegEnd = url.slice(-5);
       }
 
-      if((ending === '.jpg' || ending === '.png') || jpegEnd === 'jpeg') {
+      if((ending === '.jpg' || ending === '.png') || jpegEnd === '.jpeg') {
         return
       }
       else{
@@ -77,12 +77,12 @@ const CreateSpotForm = () => {
     if(!longitude) spotInfo.lng = 0;
 
       return dispatch(createSpotThunk(spotInfo, newErrors, images)).then(spotData => navigate(`/spots/${spotData.id}`)).catch(async (res) => {
-        // const data = await res.json();
-        // if (data && data.errors){
-        //   setErrors({...data.errors, ...newErrors});
-        // }
-        // else setErrors({...errors})
-        console.log(res)
+        const data = await res.json();
+        if (data && data.errors){
+          setErrors({...data.errors, ...newErrors});
+        }
+        else setErrors({...errors})
+        console.log(data)
       });
 
      
