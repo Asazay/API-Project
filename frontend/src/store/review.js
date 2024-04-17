@@ -22,9 +22,9 @@ export const loadReviewsThunk = (spotId) => async dispatch => {
     return res;
 }
 
-const reviewsArray = state => state.reviewData.reviews;
+const reviewsArray = state => state.reviewReducer;
 export const selectReviewsArray = createSelector(reviewsArray, (reviews) => {
-    return {...reviews}
+    return Object.values(reviews).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 });
 
 const initialState = {};
@@ -32,7 +32,9 @@ const initialState = {};
 const reviewReducer = (state = initialState, action) => {
     switch(action.type){
         case LOAD_REVIEWS: {
-            return {...state, reviews: action.payload}
+            const newObj = {};
+      action.payload.Reviews.forEach(el => newObj[el.id] = el);
+            return {...newObj}
         }
 
         default: return state;

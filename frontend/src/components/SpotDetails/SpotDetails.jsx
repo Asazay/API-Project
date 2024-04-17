@@ -5,19 +5,20 @@ import { getSpotThunk } from "../../store/spot";
 import "./SpotDetails.css";
 import { loadReviewsThunk } from "../../store/review";
 import { selectReviewsArray } from "../../store/review";
+import OpenModalButton from '../OpenModalButton/OpenModalButton';
+import CreateReviewModal from "../CreateReviewModal/CreateReviewModal";
 
 const SpotDetails = () => {
   const sessionUser = useSelector(state => state.session.user)
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spotReducer.spot);
-  console.log(spot)
   let reviews = useSelector(selectReviewsArray);
-
-  if(reviews.Reviews){
-    reviews = reviews.Reviews.sort(review => {
-      return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
-    });
-  }
+  console.log(reviews)
+  // if(reviews.Reviews){
+  //   reviews = reviews.Reviews.sort(review => {
+  //     return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
+  //   });
+  // }
 
   const dispatch = useDispatch();
 
@@ -36,6 +37,19 @@ const SpotDetails = () => {
   const handleReserveClick = (e) => {
     e.preventDefault();
     alert("Feature Coming Soon...")
+  }
+
+  const userCommented = () => {
+    let value = false;
+
+    reviews.forEach(review => {
+      if(review.User.id === sessionUser.id){
+        value = true;
+        return;
+      }
+    })
+
+    return value;
   }
 
   const checkLoggedInForSpotReviews = () => {
@@ -57,6 +71,7 @@ const SpotDetails = () => {
         </div>}
       </h2>
     </div>
+    {userCommented() === false && <><OpenModalButton buttonText='Submit Your Review' modalComponent={<CreateReviewModal/>}/></>}
     <div id="reviews">
       {reviews?.map((review) => {
         const date = new Date(review.createdAt);
