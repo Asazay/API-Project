@@ -1,20 +1,45 @@
 import "./CreateReview.css";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createReviewThunk } from "../../store/review";
+import { useModal } from "../../context/Modal";
 
 function CreateReviewModal() {
+  const spot = useSelector((state) => state.spotReducer.spot);
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [disable, setDisable] = useState(true);
+  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
+  const {closeModal} = useModal();
 
   useEffect(() => {
+    setErrors({})
     if (review.length < 10 || Number(stars) < 1) setDisable(true);
     else setDisable(false);
   }, [review, stars]);
+
+  const submitReview = async (e) => {
+    e.preventDefault();
+    const newReview = {
+      review,
+      stars,
+    };
+
+    await dispatch(createReviewThunk(spot.id, newReview)).then(() => {closeModal(); window.location.reload()}).catch(res => {
+        const data = res.json();
+        if(data && data.errors){
+            setErrors(data.errors);
+        }
+    });
+  };
 
   return (
     <form id="createReviewForm">
       <div>
         <h1>How was your stay?</h1>
+        {errors.review && <div id="error"><p>{errors.review}</p></div>}
+        {errors.stars && <div id="error"><p>{errors.stars}</p></div>}
       </div>
       <div>
         <textarea
@@ -71,7 +96,7 @@ function CreateReviewModal() {
         <b>Stars</b>
       </div>
       <div>
-        <button type="submit" disabled={disable}>
+        <button type="submit" onClick={submitReview} disabled={disable}>
           Submit Your Review
         </button>
       </div>

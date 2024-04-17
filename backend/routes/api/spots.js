@@ -206,7 +206,7 @@ router.get('/:spotId', async (req, res, next) => {
   }
 
   let owner = await theSpot.getOwner();
-  let reviews = await Review.findAll({ where: { spotId: spotId, userId: owner.id } });
+  let reviews = await Review.findAll({ where: { spotId: spotId} });
   let spotImages = await theSpot.getSpotImages();
 
   theSpot = theSpot.toJSON();

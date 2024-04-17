@@ -1,6 +1,13 @@
-
-p {
+#error{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -25px;
+}
+#error p {
   color: red;
+  justify-self: center;
+  width: max-content;
 }
 
 textarea {
