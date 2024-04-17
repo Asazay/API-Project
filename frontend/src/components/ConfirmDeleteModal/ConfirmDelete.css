@@ -1,0 +1,29 @@
+#confirmDeleteForm > div{
+    margin: 0;
+    height: fit-content;
+}
+
+#choiceDiv{
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: 1;
+    grid-auto-flow: column;
+    width: 50%;
+    margin: 0;
+}
+
+#choiceBtn{
+    justify-self: center;
+}
+
+#choiceBtn button{
+    width: 60px;
+}
+
+#yesBtn{
+    background-color: red;
+}
+
+#noBtn{
+    background-color:darkgrey
+}
