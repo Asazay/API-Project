@@ -7,7 +7,7 @@ import { loadReviewsThunk } from "../../store/review";
 import { selectReviewsArray } from "../../store/review";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import CreateReviewModal from "../CreateReviewModal/CreateReviewModal";
-import { deleteReviewThunk } from "../../store/review";
+import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 
 const SpotDetails = () => {
   const sessionUser = useSelector((state) => state.session.user);
@@ -35,15 +35,7 @@ const SpotDetails = () => {
     alert("Feature Coming Soon...");
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-    await dispatch(deleteReviewThunk(e.target.value)).then().catch(async res => {
-      const data = await res.json();
-      if(data && data.message){
-        console.log(data.message)
-      }
-    })
-  }
+
 
   const userCommented = () => {
     let value = false;
@@ -116,7 +108,12 @@ const SpotDetails = () => {
                       {month} {year}
                     </p>
                     <p>{review.review}</p>
-                    {review.User.id === sessionUser.id && <button onClick={handleDelete} value={review.id}>Delete</button>}
+                    {review.User.id === sessionUser.id && (
+                      <OpenModalButton
+                        buttonText="Delete"
+                        modalComponent={<ConfirmDeleteModal reviewId={review.id}/>}
+                      />
+                    )}
                   </div>
                 );
               })}
