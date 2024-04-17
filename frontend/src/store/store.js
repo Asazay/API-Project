@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
   // ADD REDUCERS HERE
   session: sessionReducer,
   spotReducer,
-  reviewData: reviewReducer,
+  reviewReducer,
 });
 
 let enhancer;

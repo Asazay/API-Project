@@ -5,19 +5,16 @@ import { getSpotThunk } from "../../store/spot";
 import "./SpotDetails.css";
 import { loadReviewsThunk } from "../../store/review";
 import { selectReviewsArray } from "../../store/review";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import CreateReviewModal from "../CreateReviewModal/CreateReviewModal";
+import { deleteReviewThunk } from "../../store/review";
 
 const SpotDetails = () => {
-  const sessionUser = useSelector(state => state.session.user)
+  const sessionUser = useSelector((state) => state.session.user);
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spotReducer.spot);
-  console.log(spot)
-  let reviews = useSelector(selectReviewsArray);
 
-  if(reviews.Reviews){
-    reviews = reviews.Reviews.sort(review => {
-      return new Date(review.createAt).getMilliseconds() - new Date(review.createdAt).getMilliseconds();
-    });
-  }
+  let reviews = useSelector(selectReviewsArray);
 
   const dispatch = useDispatch();
 
@@ -35,47 +32,99 @@ const SpotDetails = () => {
 
   const handleReserveClick = (e) => {
     e.preventDefault();
-    alert("Feature Coming Soon...")
+    alert("Feature Coming Soon...");
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    await dispatch(deleteReviewThunk(e.target.value)).then().catch(async res => {
+      const data = await res.json();
+      if(data && data.message){
+        console.log(data.message)
+      }
+    })
   }
+
+  const userCommented = () => {
+    let value = false;
+
+    reviews.forEach((review) => {
+      if (review.User.id === sessionUser.id) {
+        value = true;
+        return;
+      }
+    });
+
+    return value;
+  };
 
   const checkLoggedInForSpotReviews = () => {
-    if(sessionUser && sessionUser.id !== spot.Owner.id && !reviews.length){
-      return (<h2>Be the first to post a review!</h2>)
-    }
-    else return (<div id="spotReviewDiv">
-    <div>
-      <h2>
-        <div style={{ display: "inline" }}>
-          {" "}
-          ⭐{spot.avgStarRating
-            ? spot.avgStarRating.toFixed(1)
-            : "New"}{" "}
-        </div>
-        {spot.numReviews > 0 && 
-        <div style={{ display: "inline" }}>
-          • {" "} {spot.numReviews}  {spot.numReviews > 1 ? "reviews" : "review"}
-        </div>}
-      </h2>
-    </div>
-    <div id="reviews">
-      {reviews?.map((review) => {
-        const date = new Date(review.createdAt);
-        const month = date.toLocaleString("default", { month: "long" });
-        const year = date.getFullYear();
-
-        return (
-          <div key={review.id} id="review">
-            <div style={{fontWeight: 'bold'}}>{review.User.firstName}</div>
-            <p style={{ color: "gray" }}>
-              {month} {year}
-            </p>
-            <p>{review.review}</p>
+    if (sessionUser && sessionUser.id !== spot.Owner.id && !reviews.length) {
+      return (
+        <>
+          <h2>Be the first to post a review!</h2>
+          {reviews[0].User && userCommented() === false && (
+            <>
+              <OpenModalButton
+                buttonText="Submit Your Review"
+                modalComponent={<CreateReviewModal />}
+              />
+            </>
+          )}
+        </>
+      );
+    } else
+      return (
+        <div id="spotReviewDiv">
+          <div>
+            <h2>
+              <div style={{ display: "inline" }}>
+                {" "}
+                ⭐{spot.avgStarRating
+                  ? spot.avgStarRating.toFixed(1)
+                  : "New"}{" "}
+              </div>
+              {spot.numReviews > 0 && (
+                <div style={{ display: "inline" }}>
+                  • {spot.numReviews}{" "}
+                  {spot.numReviews > 1 ? "reviews" : "review"}
+                </div>
+              )}
+            </h2>
           </div>
-        );
-      })}
-    </div>
-  </div>)
-  }
+          {reviews[0].User && userCommented() === false && (
+            <>
+              <OpenModalButton
+                buttonText="Submit Your Review"
+                modalComponent={<CreateReviewModal />}
+              />
+            </>
+          )}
+          {reviews && reviews[0].createdAt && reviews[0].User && (
+            <div id="reviews">
+              {reviews.map((review) => {
+                const date = new Date(review.createdAt);
+                const month = date.toLocaleString("default", { month: "long" });
+                const year = date.getFullYear();
+
+                return (
+                  <div key={review.id} id="review">
+                    <div style={{ fontWeight: "bold" }}>
+                      {review.User.firstName}
+                    </div>
+                    <p style={{ color: "gray" }}>
+                      {month} {year}
+                    </p>
+                    <p>{review.review}</p>
+                    {review.User.id === sessionUser.id && <button onClick={handleDelete} value={review.id}>Delete</button>}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+  };
 
   // Page Content
   if (spot && Object.keys(spot).length === 17 && reviews) {
@@ -85,7 +134,7 @@ const SpotDetails = () => {
         <h4>{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
         <div id="spotImgs">
           <div id="mainSpotImg">
-            {spot.SpotImages &&<img src={spot.SpotImages[0].url} />}
+            {spot.SpotImages && <img src={spot.SpotImages[0].url} />}
           </div>
           <div id="additionalSpotImgs">
             <div className="additionalImg">
@@ -129,7 +178,11 @@ const SpotDetails = () => {
         <div id="infoContent">
           <div id="hostedBy">
             <h3>
-              {spot.Owner.firstName && spot.Owner.lastName && <>Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}</>}
+              {spot.Owner.firstName && spot.Owner.lastName && (
+                <>
+                  Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}
+                </>
+              )}
             </h3>
             {spot.description && <p>{spot.description}</p>}
           </div>
@@ -137,7 +190,7 @@ const SpotDetails = () => {
             <div id="price-reviews">
               <div>
                 <p>
-                  <span style={{ fontWeight: "bold"}}>${spot.price}</span>{" "}
+                  <span style={{ fontWeight: "bold" }}>${spot.price}</span>{" "}
                   night
                 </p>
               </div>
@@ -145,12 +198,17 @@ const SpotDetails = () => {
                 <p>
                   ⭐{spot.avgStarRating ? spot.avgStarRating.toFixed(1) : "New"}
                 </p>
-                {spot.numReviews > 0 && <><p>•</p>
-                <p>
-                  {spot.numReviews} {
-                (spot.numReviews === 0 || spot.numReviews > 1) ? 'reviews' : 'review'
-                  }
-                </p></>}
+                {spot.numReviews > 0 && (
+                  <>
+                    <p>•</p>
+                    <p>
+                      {spot.numReviews}{" "}
+                      {spot.numReviews === 0 || spot.numReviews > 1
+                        ? "reviews"
+                        : "review"}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             <div id="reserveBtn">
@@ -158,7 +216,7 @@ const SpotDetails = () => {
             </div>
           </div>
         </div>
-        {checkLoggedInForSpotReviews()}   
+        {checkLoggedInForSpotReviews()}
       </div>
     );
   }

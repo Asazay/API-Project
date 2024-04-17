@@ -41,7 +41,7 @@
     right: 50px;
   }
 
-  #loginForm, #signupForm{
+  #loginForm, #signupForm, #createReviewForm{
     display: flex;
     flex-direction: column;
     justify-content: center;
