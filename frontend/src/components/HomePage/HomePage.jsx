@@ -1,14 +1,14 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 // import {useNavigate} from 'react-router-dom';
-// import { selectAllSpots } from '../../store/spot';
+import { selectAllSpots } from '../../store/spot';
 import SpotPageItem from './SpotPageItem';
 import { loadSpotsThunk } from '../../store/spot';
 
 import './HomePage.css';
 
 const HomePage = () => {
-    let spots = useSelector(state => state.spotReducer.spots);
+    let spots = useSelector(selectAllSpots);
     // spots ? spots.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) : {}
     console.log(spots)
     const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const HomePage = () => {
         {
          spots && 
          <>
-         {spots.map(spot => {
+         {spots?.map(spot => {
             return (
                 <SpotPageItem key={spot.id} spot={spot}/>
             )
