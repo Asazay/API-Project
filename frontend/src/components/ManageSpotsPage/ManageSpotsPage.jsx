@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserSpotsThunk } from "../../store/spot";
 import { selectAllSpots } from "../../store/spot";
-import MangageSpotItem from "../UpdateSpotForm/ManageSpotItem";
+import MangageSpotItem from "./ManageSpotItem";
+import { NavLink } from "react-router-dom";
 
 const ManageSpotsPage = () => {
   const sessionUser = useSelector((state) => state.session.user);
@@ -17,8 +18,8 @@ const ManageSpotsPage = () => {
     });
   }, [dispatch, sessionUser]);
 
-  return (
-    <>
+  if(spots && spots.length) return (
+    <div id="managePage">
       <div>
         <h2>Manage Your Spots</h2>
         <button>Create a New Spot</button>
@@ -36,8 +37,15 @@ const ManageSpotsPage = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
+
+  else return (
+    <div id="managePage">
+    <h2>Manage Your Spots</h2>
+    <NavLink to='/spots/new'>Create a New Spot</NavLink>
+    </div>
+  )
 };
 
 export default ManageSpotsPage;

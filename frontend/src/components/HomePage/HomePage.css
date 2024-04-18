@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(100px, 100vw));
     grid-template-rows: repeat(auto, minmax(25vw, 100vw));
+    gap: calc(5%);
     padding: 10px;
 }
 

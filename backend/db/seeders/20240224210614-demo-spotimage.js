@@ -30,16 +30,6 @@ module.exports = {
       url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house4.jpg',
       preview: true
     },
-    {
-      spotId: 5,
-      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house6.jpg',
-      preview: true
-    },
-    {
-      spotId: 6,
-      url: 'https://asazaybucket.s3.us-east-2.amazonaws.com/house5.jpg',
-      preview: true
-    }
    ])
   },
 

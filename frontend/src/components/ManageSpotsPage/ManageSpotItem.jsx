@@ -1,9 +1,7 @@
 import { NavLink } from "react-router-dom";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
-// import { useModal } from "../../context/Modal";
 
 const MangageSpotItem = ({ spot }) => {
-    // const {closeModal} = useModal();
 
   let newAvgRating = spot.avgRating;
 
@@ -28,9 +26,9 @@ const MangageSpotItem = ({ spot }) => {
           </p>
         </div>
       </NavLink>
-      <div style={{display: 'flex', justifyContent: 'space-around', width: '90%'}}>
+      <div style={{display: 'flex', width: '90%'}}>
         <NavLink to={`/spots/${spot.id}/edit`}>
-          <button>Update</button>
+          <button style={{marginRight: '10px'}}>Update</button>
         </NavLink>
         <div>
             <OpenModalButton
