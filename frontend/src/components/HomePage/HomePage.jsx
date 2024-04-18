@@ -9,8 +9,6 @@ import './HomePage.css';
 
 const HomePage = () => {
     let spots = useSelector(selectAllSpots);
-    // spots ? spots.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) : {}
-    console.log(spots)
     const dispatch = useDispatch();
 
     useEffect(() => {

@@ -5,10 +5,10 @@
 
 #choiceDiv{
     display: grid;
-    grid-template-columns: repeat(2, 50%);
-    grid-template-rows: 1;
+    grid-template-columns: 1;
+    grid-template-rows: repeat(2, 50%);
     grid-auto-flow: column;
-    width: 50%;
+    width: max-content;
     margin: 0;
 }
 
@@ -17,8 +17,14 @@
 }
 
 #choiceBtn button{
-    width: 60px;
+    text-wrap: nowrap;
+    width: 100%;
 }
+
+#choiceBtn button:hover{
+    color: aquamarine;
+}
+
 
 #yesBtn{
     background-color: red;
