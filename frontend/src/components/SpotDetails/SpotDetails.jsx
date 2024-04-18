@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
 import { useEffect } from "react";
 import { getSpotThunk } from "../../store/spot";
 import "./SpotDetails.css";
@@ -35,13 +35,32 @@ const SpotDetails = () => {
     alert("Feature Coming Soon...");
   };
 
+  const loadRatingInfo = () => {
+    let totalStars = 0;
+    let numReviews = 0;
+    let avgStarRating = 0;
 
+    if(reviews){
+      reviews.forEach(rev => {
+        totalStars += Number(rev.stars);
+        numReviews += 1;
+      });
+
+      avgStarRating = (totalStars / numReviews).toFixed(1);
+    }
+
+    if(totalStars && numReviews && avgStarRating){
+      return {success: true, avgStarRating, numReviews}
+    }
+
+    else return {success: false}
+  }
 
   const userCommented = () => {
     let value = false;
 
     reviews.forEach((review) => {
-      if (review.User.id === sessionUser.id) {
+      if (review && sessionUser && review.User.id === sessionUser.id) {
         value = true;
         return;
       }
@@ -51,11 +70,12 @@ const SpotDetails = () => {
   };
 
   const checkLoggedInForSpotReviews = () => {
+    const ratingInfo = loadRatingInfo();
     if (sessionUser && sessionUser.id !== spot.Owner.id && !reviews.length) {
       return (
         <>
           <h2>Be the first to post a review!</h2>
-          {reviews[0].User && userCommented() === false && (
+          {reviews[0] && reviews[0].User && reviews[0].User.id && userCommented() === false && (
             <>
               <OpenModalButton
                 buttonText="Submit Your Review"
@@ -72,19 +92,19 @@ const SpotDetails = () => {
             <h2>
               <div style={{ display: "inline" }}>
                 {" "}
-                ⭐{spot.avgStarRating
-                  ? spot.avgStarRating.toFixed(1)
+                ⭐{ratingInfo.avgStarRating
+                  ? ratingInfo.avgStarRating
                   : "New"}{" "}
               </div>
-              {spot.numReviews > 0 && (
+              {ratingInfo.numReviews && ratingInfo.numReviews > 0 && (
                 <div style={{ display: "inline" }}>
-                  • {spot.numReviews}{" "}
-                  {spot.numReviews > 1 ? "reviews" : "review"}
+                  • {ratingInfo.numReviews}{" "}
+                  {ratingInfo.numReviews > 1 ? "reviews" : "review"}
                 </div>
               )}
             </h2>
           </div>
-          {reviews[0].User && userCommented() === false && (
+          {sessionUser && ratingInfo.success && userCommented() === false && (
             <>
               <OpenModalButton
                 buttonText="Submit Your Review"
@@ -92,7 +112,7 @@ const SpotDetails = () => {
               />
             </>
           )}
-          {reviews && reviews[0].createdAt && reviews[0].User && (
+          {reviews && reviews[0] && reviews[0].createdAt && reviews[0].User && (
             <div id="reviews">
               {reviews.map((review) => {
                 const date = new Date(review.createdAt);
@@ -108,7 +128,7 @@ const SpotDetails = () => {
                       {month} {year}
                     </p>
                     <p>{review.review}</p>
-                    {review.User.id === sessionUser.id && (
+                    {sessionUser && review.User.id === sessionUser.id && (
                       <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<ConfirmDeleteModal reviewId={review.id}/>}
@@ -125,6 +145,7 @@ const SpotDetails = () => {
 
   // Page Content
   if (spot && Object.keys(spot).length === 17 && reviews) {
+    const ratingInfo = loadRatingInfo();
     return (
       <div id={`spotDetails`}>
         <h2>{spot.name}</h2>
@@ -193,14 +214,14 @@ const SpotDetails = () => {
               </div>
               <div>
                 <p>
-                  ⭐{spot.avgStarRating ? spot.avgStarRating.toFixed(1) : "New"}
+                  ⭐{ratingInfo.avgStarRating ? ratingInfo.avgStarRating : "New"}
                 </p>
-                {spot.numReviews > 0 && (
+                {ratingInfo.numReviews > 0 && (
                   <>
                     <p>•</p>
                     <p>
-                      {spot.numReviews}{" "}
-                      {spot.numReviews === 0 || spot.numReviews > 1
+                      {ratingInfo.numReviews}{" "}
+                      {ratingInfo.numReviews === 0 || ratingInfo.numReviews > 1
                         ? "reviews"
                         : "review"}
                     </p>

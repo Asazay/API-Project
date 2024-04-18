@@ -5,6 +5,7 @@ import { createReviewThunk } from "../../store/review";
 import { useModal } from "../../context/Modal";
 
 function CreateReviewModal() {
+  const sessionUser = useSelector(state => state.session.user);
   const spot = useSelector((state) => state.spotReducer.spot);
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
@@ -26,7 +27,7 @@ function CreateReviewModal() {
       stars,
     };
 
-    await dispatch(createReviewThunk(spot.id, newReview)).then(() => {closeModal(); window.location.reload()}).catch(res => {
+    await dispatch(createReviewThunk(spot.id, newReview, sessionUser)).then(() => {closeModal();}).catch(res => {
         const data = res.json();
         if(data && data.errors){
             setErrors(data.errors);

@@ -41,7 +41,7 @@ export const loadReviewsThunk = (spotId) => async dispatch => {
     return res;
 }
 
-export const createReviewThunk = (spotId, review) => async dispatch => {
+export const createReviewThunk = (spotId, review, user) => async dispatch => {
     const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
         body: JSON.stringify(review)
@@ -49,6 +49,8 @@ export const createReviewThunk = (spotId, review) => async dispatch => {
 
     if(res.ok){
         const data = await res.json();
+        data.User = user;
+        console.log(data)
         dispatch(createReview(data));
         return data;
     }
@@ -85,14 +87,18 @@ const reviewReducer = (state = initialState, action) => {
         }
 
         case CREATE_REVIEW: {
-            return {...state, ...action.payload}
+            const newObj = {
+                ...state,
+                [action.payload.id]: action.payload
+            }
+            return newObj;
         }
 
         case DELETE_REVIEW: {
             const newObj = {};
             Object.values(state).forEach(review => newObj[review.id] = review);
             delete newObj[action.payload]
-            return {...newObj}
+            return newObj;
         }
 
         default: return state;

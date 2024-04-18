@@ -10,7 +10,7 @@ const ConfirmDeleteModal = ({reviewId}) => {
     const handleDelete = async (e) => {
         e.preventDefault();
         await dispatch(deleteReviewThunk(reviewId))
-          .then(() => {closeModal(); window.location.reload()})
+          .then(() => {closeModal();})
           .catch(async (res) => {
             const data = await res.json();
             if (data && data.message) {
@@ -24,8 +24,8 @@ const ConfirmDeleteModal = ({reviewId}) => {
             <div><h1>Confirm Delete</h1></div>
             <div><p>Are you sure you want to delete this review?</p></div>
             <div id='choiceDiv'>
-                <div id='choiceBtn'><button id="yesBtn" onClick={handleDelete}>Yes</button></div>
-                <div id='choiceBtn'><button id="noBtn" onClick={closeModal}>No</button></div>
+                <div id='choiceBtn'><button id="yesBtn" onClick={handleDelete}>{`Yes (Delete Review)`}</button></div>
+                <div id='choiceBtn'><button id="noBtn" onClick={closeModal}>{`No (Keep Review)`}</button></div>
             </div>
         </div>
     )
