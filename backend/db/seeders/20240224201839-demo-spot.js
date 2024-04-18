@@ -23,7 +23,7 @@ module.exports = {
         price: 89.95,
       },
       {
-        ownerId: 1,
+        ownerId: 2,
         address: "123 Demo User Way Apt 352",
         city: 'Grand Rapids',
         state: 'Michigan',
@@ -35,7 +35,7 @@ module.exports = {
         price: 95.95,
       },
       {
-        ownerId: 2,
+        ownerId: 1,
         address: "123 Baltimore Way",
         city: 'Baltimore',
         state: 'Maryland',
@@ -58,30 +58,6 @@ module.exports = {
         description: 'A great place to stay',
         price: 89.95,
       },
-      {
-        ownerId: 2,
-        address: "5589 Random Way",
-        city: 'Baltimore',
-        state: 'Maryland',
-        country: "United States",
-        lat: 34.7645358,
-        lng: -122.4730327,
-        name: 'Place at Devos',
-        description: 'A great place to stay',
-        price: 80.95,
-      },
-      {
-        ownerId: 3,
-        address: "5555 De Wavy Rd",
-        city: 'Chicago',
-        state: 'Illinois',
-        country: "United States",
-        lat: 25.7645358,
-        lng: -144.4730327,
-        name: 'La Casa Notre',
-        description: 'A great place to stay',
-        price: 105.95,
-      },
     ]);
   },
 
@@ -90,7 +66,7 @@ module.exports = {
     return queryInterface.bulkDelete(options, {
       address: {
         [Op.in]: ['123 Demo User Way Apt 223', '123 Demo User Way Apt 352', '123 Baltimore Way',
-      '5555 Random Way', '5589 Random Way', '5555 De Wavy Rd']
+      '5555 Random Way',]
       }
     }, {});
   }
