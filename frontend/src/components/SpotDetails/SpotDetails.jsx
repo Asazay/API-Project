@@ -75,13 +75,13 @@ const SpotDetails = () => {
       return (
         <>
           <h2>Be the first to post a review!</h2>
-          {reviews[0] && reviews[0].User && reviews[0].User.id && userCommented() === false && (
-            <>
+          {userCommented() === false && (
+            <div style={{width: 'max-content', flexWrap: 'nowrap'}}>
               <OpenModalButton
                 buttonText="Submit Your Review"
                 modalComponent={<CreateReviewModal />}
               />
-            </>
+            </div>
           )}
         </>
       );
@@ -104,7 +104,7 @@ const SpotDetails = () => {
               )}
             </h2>
           </div>
-          {sessionUser && ratingInfo.success && userCommented() === false && (
+          {sessionUser && sessionUser.id !== spot.Owner.id && ratingInfo.success && userCommented() === false && (
             <>
               <OpenModalButton
                 buttonText="Submit Your Review"
