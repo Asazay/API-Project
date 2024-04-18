@@ -31,6 +31,10 @@
     opacity: .85;
 }
 
+.profile-dropdown button:hover{
+    background-color: darkcyan;
+}
+
 .hidden{
     display: none;
 }
