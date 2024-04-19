@@ -68,6 +68,8 @@
   body {
     border: dotted lightgray 1px;
     margin: 0;
+    width: 100vw;
+    height: 100vh;
   }
 
   a:hover,

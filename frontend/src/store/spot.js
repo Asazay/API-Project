@@ -123,7 +123,7 @@ export const getUserSpotsThunk = () => async (dispatch) => {
 
 export const updateSpotThunk =
   (spotId, spotInfo, valErrors, spotImages, images) => async (dispatch) => {
-    console.log(spotInfo);
+
     const res = await csrfFetch(`/api/spots/${spotId}`, {
       method: "PUT",
       body: JSON.stringify(spotInfo),
@@ -140,7 +140,7 @@ export const updateSpotThunk =
           });
         }
       });
-
+      console.log(Object.values(images))
       Object.values(images).forEach(async (img) => {
         if (img) {
           await csrfFetch(`/api/spots/${data.id}/images`, {
