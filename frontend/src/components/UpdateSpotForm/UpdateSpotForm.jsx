@@ -1,58 +1,61 @@
 import { useState, useEffect } from "react";
-import { createSpotThunk } from "../../store/spot";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSpotThunk } from "../../store/spot";
+import { getSpotThunk, updateSpotThunk } from "../../store/spot";
 
 import "./UpdateSpot.css";
 
 const UpdateSpotForm = () => {
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spotReducer.spot);
-  spot ? console.log(spot) : {};
-  const [country, setCountry] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [description, setDescription] = useState('');
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [photo1, setPhoto1] = useState('');
-  const [photo2, setPhoto2] = useState('');
-  const [photo3, setPhoto3] = useState('');
-  const [photo4, setPhoto4] = useState('');
-  const [photo5, setPhoto5] = useState('');
+
+  const [country, setCountry] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [photo1, setPhoto1] = useState("");
+  const [photo2, setPhoto2] = useState("");
+  const [photo3, setPhoto3] = useState("");
+  const [photo4, setPhoto4] = useState("");
+  const [photo5, setPhoto5] = useState("");
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {}, [errors]);
+  useEffect(() => {
+  }, [errors, spot]);
 
   useEffect(() => {
-    async function loadSpot(){
-        await dispatch(getSpotThunk(spotId));
-    }
+    const timeOut = setTimeout(() => {
+      if(spot && spot.SpotImages && spot.SpotImages){
+      setPrice(spot.price);
+      setTitle(spot.name);
+      setCountry(spot.country);
+      setAddress(spot.address);
+      setCity(spot.city);
+      setState(spot.state);
+      setDescription(spot.description);
+      setLatitude(spot.latitude);
+      setLongitude(spot.longitude);
+      setPhoto1(spot.SpotImages[0]?.url);
+      setPhoto2(spot.SpotImages[1]?.url);
+      setPhoto3(spot.SpotImages[2]?.url);
+      setPhoto4(spot.SpotImages[3]?.url);
+      setPhoto5(spot.SpotImages[4]?.url);
+      }
+    }, 500);
 
-    loadSpot();
+    return () => clearTimeout(timeOut)
+  }, [spot])
 
-    // setPrice(spot.price)
-    // setTitle(spot.name)
-    // setCountry(spot.country);
-    // setAddress(spot.address);
-    // setCity(spot.city);
-    // setState(spot.state);
-    // setDescription(spot.description);
-    // setLatitude(spot.latitude);
-    // setLongitude(spot.longitude);
-    // setPhoto1(spot.SpotImages[0].url);
-    // setPhoto2(spot.SpotImages[1].url);
-    // setPhoto3(spot.SpotImages[2].url);
-    // setPhoto4(spot.SpotImages[3].url);
-    // setPhoto1(spot.SpotImages[4].url);
-
+  useEffect(() => {
+    dispatch(getSpotThunk(spotId));
   }, [dispatch, spotId]);
 
   const handleSubmit = async (e) => {
@@ -113,7 +116,7 @@ const UpdateSpotForm = () => {
     if (!latitude) spotInfo.lat = 0;
     if (!longitude) spotInfo.lng = 0;
 
-    return dispatch(createSpotThunk(spotInfo, newErrors, images))
+    return dispatch(updateSpotThunk(spotId, spotInfo, newErrors, spot.SpotImages, images))
       .then((spotData) => navigate(`/spots/${spotData.id}`))
       .catch(async (res) => {
         const data = await res.json();
@@ -141,7 +144,7 @@ const UpdateSpotForm = () => {
           </label>
           <input
             type="text"
-            value={country}
+            value={country || ''}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="Country"
           />
@@ -152,7 +155,7 @@ const UpdateSpotForm = () => {
           </label>
           <input
             type="text"
-            value={address}
+            value={address || ''}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Address"
           />
@@ -162,7 +165,7 @@ const UpdateSpotForm = () => {
             <label>City{errors.city && <span>{errors.city}</span>}</label>
             <input
               type="text"
-              value={city}
+              value={city || ''}
               onChange={(e) => setCity(e.target.value)}
               placeholder="City"
             />
@@ -171,7 +174,7 @@ const UpdateSpotForm = () => {
             <label>State{errors.state && <span>{errors.state}</span>}</label>
             <input
               type="text"
-              value={state}
+              value={state || ''}
               onChange={(e) => setState(e.target.value)}
               placeholder="STATE"
             />
@@ -182,7 +185,7 @@ const UpdateSpotForm = () => {
             </label>
             <input
               type="number"
-              value={latitude}
+              value={latitude || ''}
               onChange={(e) => setLatitude(e.target.value)}
               placeholder="Latitude"
             />
@@ -193,7 +196,7 @@ const UpdateSpotForm = () => {
             </label>
             <input
               type="number"
-              value={longitude}
+              value={longitude || ''}
               onChange={(e) => setLongitude(e.target.value)}
               placeholder="Longitude"
             />
@@ -208,7 +211,7 @@ const UpdateSpotForm = () => {
           <textarea
             rows={10}
             cols={15}
-            value={description}
+            value={description || ''}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Please write at least 30 characters"
           />
@@ -224,7 +227,7 @@ const UpdateSpotForm = () => {
           </p>
           <input
             type="text"
-            value={title}
+            value={title || ''}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Name of your spot"
           />
@@ -238,7 +241,7 @@ const UpdateSpotForm = () => {
           </p>
           <input
             type="text"
-            value={price}
+            value={price || ''}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="Price per night(USD)"
           />
@@ -250,7 +253,7 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo1}
+              value={photo1 || ''}
               onChange={(e) => setPhoto1(e.target.value)}
               placeholder="Preview Image URL"
             />
@@ -262,7 +265,7 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo2}
+              value={photo2 || ''}
               onChange={(e) => setPhoto2(e.target.value)}
               placeholder="Image URL"
             />
@@ -271,7 +274,7 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo3}
+              value={photo3 || ''}
               onChange={(e) => setPhoto3(e.target.value)}
               placeholder="Image URL"
             />
@@ -280,7 +283,7 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo4}
+              value={photo4 || ''}
               onChange={(e) => setPhoto4(e.target.value)}
               placeholder="Image URL"
             />
@@ -289,7 +292,7 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo5}
+              value={photo5 || ''}
               onChange={(e) => setPhoto5(e.target.value)}
               placeholder="Image URL"
             />
@@ -297,7 +300,7 @@ const UpdateSpotForm = () => {
           </div>
         </div>
         <div>
-          <button onClick={handleSubmit}>Create Spot</button>
+          <button onClick={handleSubmit}>Update your Spot</button>
         </div>
       </form>
     </div>

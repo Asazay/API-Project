@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import ConfirmDeleteSpotModal from "../ConfirmDeleteModal/ConfirmDeleteSpotModal";
 
 const MangageSpotItem = ({ spot }) => {
 
@@ -33,7 +34,7 @@ const MangageSpotItem = ({ spot }) => {
         <div>
             <OpenModalButton
             buttonText={`Delete`}
-            modalComponent={<h1>Hello</h1>}
+            modalComponent={<ConfirmDeleteSpotModal spotId={spot.id}/>}
              />
         </div>
       </div>

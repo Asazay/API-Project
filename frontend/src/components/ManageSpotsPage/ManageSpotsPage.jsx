@@ -22,7 +22,7 @@ const ManageSpotsPage = () => {
     <div id="managePage">
       <div>
         <h2>Manage Your Spots</h2>
-        <button>Create a New Spot</button>
+        {/* <button>Create a New Spot</button> */}
       </div>
       <div id="userSpotsDiv">
         {spots && (
