@@ -9,7 +9,7 @@ const SpotPageItem = ({spot}) => {
         <div id={spot.id} className="spotTile toolTip">
             <span className="toolTipText">{spot.name}</span>
            <NavLink to={`/spots/${spot.id}`}>
-           <div>
+           <div id="imgDiv">
                 <img src={spot.previewImage} alt={spot.previewImage}/>
             </div>
             <div>

@@ -1,12 +1,23 @@
 #spotContent {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 20vw));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 15vw));
     gap: calc(5%);
     padding: 10px 0;
+    margin: 1% 4%;
+}
+
+.spotTile{
+    width: 300px;
+    border-radius: 2%;
 }
 
 .spotTile:hover{
     background-color: azure;
+}
+
+#imgDiv{
+    display: flex;
+    width: 100%;
 }
 
 .toolTip img{
@@ -18,7 +29,8 @@
 
 
 #spotContent img{
-    border: solid black 2px;
+    border: solid lightslategray 1px;
+    border-radius: 5px;
 }
 
 #boldPrice{
