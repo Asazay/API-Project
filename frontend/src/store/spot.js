@@ -1,12 +1,12 @@
 import { csrfFetch } from "./csrf";
-import {createSelector} from 'reselect';
+import { createSelector } from "reselect";
 
 // Spot
 const CREATE_SPOT = "session/createSpot";
 const GET_SPOT = "session/getSpot";
-const GET_USER_SPOTS = "session/getUserSpots"
+const GET_USER_SPOTS = "session/getUserSpots";
 const UPDATE_SPOT = "session/updateSpot";
-// const DELETE_SPOT = "session/deleteSpot"
+const DELETE_SPOT = "session/deleteSpot";
 const LOAD_SPOTS = "session/loadSpots";
 
 // Actions
@@ -27,8 +27,8 @@ const getSpot = (spot) => {
 const getUserSpots = (spots) => {
   return {
     type: GET_USER_SPOTS,
-    payload: spots
-  }
+    payload: spots,
+  };
 };
 
 const createSpot = (spot) => {
@@ -41,9 +41,16 @@ const createSpot = (spot) => {
 const updateSpot = (spot) => {
   return {
     type: UPDATE_SPOT,
-    payload: spot
-  }
-}
+    payload: spot,
+  };
+};
+
+const deleteSpot = (spot) => {
+  return {
+    type: DELETE_SPOT,
+    payload: spot,
+  };
+};
 
 //Thunk actions
 export const loadSpotsThunk = () => async (dispatch) => {
@@ -104,25 +111,35 @@ export const createSpotThunk =
     return res;
   };
 
-  export const getUserSpotsThunk = () => async dispatch => {
-    const res = await csrfFetch(`/api/spots/current`);
+export const getUserSpotsThunk = () => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/current`);
 
-    if(res.ok){
-      const data = await res.json();
-      dispatch(getUserSpots(data));
-      return;
-    }
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(getUserSpots(data));
+    return;
   }
+};
 
-  export const updateSpotThunk = (spotId, spotInfo, valErrors, images) => async dispatch => {
+export const updateSpotThunk =
+  (spotId, spotInfo, valErrors, spotImages, images) => async (dispatch) => {
+    console.log(spotInfo);
     const res = await csrfFetch(`/api/spots/${spotId}`, {
-      method: 'PUT',
-      body: JSON.stringify(spotInfo)
+      method: "PUT",
+      body: JSON.stringify(spotInfo),
     });
 
-    if(res.ok){
+    if (res.ok) {
       const data = await res.json();
       dispatch(updateSpot(data));
+
+      spotImages.forEach(async (img) => {
+        if (img) {
+          await csrfFetch(`/api/spot-images/${img.id}`, {
+            method: "DELETE",
+          });
+        }
+      });
 
       Object.values(images).forEach(async (img) => {
         if (img) {
@@ -136,14 +153,36 @@ export const createSpotThunk =
       });
 
       return data;
+    } else return res;
+  };
+
+export const deleteSpotThunk = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`);
+
+  if (response.ok) {
+    const res = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(deleteSpot(spotId));
+      return data;
     }
-    else return res;
+
+    return res;
   }
 
-// Selectors
-const getSpots = state => state.spotReducer;
-export const selectAllSpots = createSelector(getSpots, spots => Object.values(spots).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+  return response;
+};
 
+// Selectors
+const getSpots = (state) => state.spotReducer;
+export const selectAllSpots = createSelector(getSpots, (spots) =>
+  Object.values(spots).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+);
 
 // Reducer
 const initialState = {};
@@ -152,9 +191,9 @@ const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_SPOTS: {
       const newObj = {};
-      action.payload.Spots.forEach(el => newObj[el.id] = el);
+      action.payload.Spots.forEach((el) => (newObj[el.id] = el));
 
-      return {...newObj };
+      return { ...newObj };
     }
 
     case GET_SPOT: {
@@ -163,8 +202,8 @@ const spotReducer = (state = initialState, action) => {
 
     case GET_USER_SPOTS: {
       const newObj = {};
-      action.payload.Spots.forEach(el => newObj[el.id] = el)
-      return {...newObj}
+      action.payload.Spots.forEach((el) => (newObj[el.id] = el));
+      return { ...newObj };
     }
 
     case CREATE_SPOT: {
@@ -172,7 +211,13 @@ const spotReducer = (state = initialState, action) => {
     }
 
     case UPDATE_SPOT: {
-      return {spot: action.payload}
+      return { spot: action.payload };
+    }
+
+    case DELETE_SPOT: {
+      const newObj = {...state}
+      delete newObj[action.payload];
+      return newObj;
     }
 
     default:
