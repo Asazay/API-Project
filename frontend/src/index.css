@@ -9,11 +9,12 @@
     margin: 0px auto;
     box-sizing: border-box;
     background-color: whitesmoke;
+    overflow: unset;
   }
 
   #navBar {
     grid-area: nav;
-    border-bottom: solid lightgrey 2px;
+    border-bottom: solid black 2px;
     margin: 0%;
     display: grid;
     grid-template-columns: 2;
@@ -29,6 +30,18 @@
     grid-area: logo;
     justify-self: left;
     align-self: center;
+  }
+
+  .button{
+    border: solid darkgrey 1px;
+    background-image: linear-gradient(whitesmoke,lightgray);
+    border-radius: 5px;
+  }
+
+  
+  .button:hover{
+    border: solid black 1px;
+    background-image: linear-gradient(lightgray, white);
   }
 
   #menuBtn {
@@ -66,10 +79,22 @@
   }
 
   body {
-    border: dotted lightgray 1px;
-    margin: 0;
+    box-sizing: border-box;
+    margin: 0 auto;
     width: 100vw;
     height: 100vh;
+    padding: 0 40px;
+  }
+
+  li{
+    margin: 5px;
+    justify-self: center;
+    width: max-content;
+  }
+
+  .login-signup-opt{
+    border-bottom: solid lightgrey 1px;
+    width: 100%;
   }
 
   a:hover,
@@ -80,7 +105,7 @@
   }
 
   li#LogIn:hover, li#SignUp:hover {
-    color: lightseagreen;
+    color: aquamarine;
   }
 
   a {

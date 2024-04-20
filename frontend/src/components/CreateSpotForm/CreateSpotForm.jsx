@@ -242,7 +242,7 @@ const CreateSpotForm = () => {
           </div>
         </div>
         <div>
-          <button onClick={handleSubmit}>Create Spot</button>
+          <button className="button" onClick={handleSubmit}>Create Spot</button>
         </div>
       </form>
     </div>

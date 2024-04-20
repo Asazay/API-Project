@@ -16,7 +16,9 @@ function OpenModalMenuItem({
   };
 
   return (
-    <li id={itemText.split(" ").join("")} onClick={onClick}>{itemText}</li>
+    <div className='login-signup-opt'>
+      <li id={itemText.split(" ").join("")} onClick={onClick}>{itemText}</li>
+    </div>
   );
 }
 

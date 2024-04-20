@@ -97,7 +97,7 @@ function CreateReviewModal() {
         <b>Stars</b>
       </div>
       <div>
-        <button type="submit" onClick={submitReview} disabled={disable}>
+        <button className='button' type="submit" onClick={submitReview} disabled={disable}>
           Submit Your Review
         </button>
       </div>
