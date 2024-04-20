@@ -212,7 +212,7 @@ const SpotDetails = () => {
                   night
                 </p>
               </div>
-              <div>
+              <div id="rating-reviews">
                 <p>
                   ⭐{ratingInfo.avgStarRating ? ratingInfo.avgStarRating : "New"}
                 </p>
