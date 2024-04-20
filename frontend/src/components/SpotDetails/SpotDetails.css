@@ -51,7 +51,7 @@
 
 #infoContent{
     display: grid;
-    grid-template-columns: repeat(2, 50%);
+    grid-template-columns: repeat(2, 60% 40%);
     grid-template-rows: 1;
     border-bottom: solid lightgrey 3px;
     max-height: 100%;
