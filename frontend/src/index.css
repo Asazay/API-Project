@@ -1,5 +1,9 @@
 /* TODO: Add sitewide styles */
-  html {
+@media screen and (min-width:769) {
+  
+}
+
+html {
     display: grid;
     grid-template-columns: 1;
     grid-template-rows: auto auto;

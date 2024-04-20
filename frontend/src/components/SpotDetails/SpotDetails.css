@@ -51,9 +51,10 @@
 
 #infoContent{
     display: grid;
-    grid-template-columns: repeat(2, 70% 30%);
+    grid-template-columns: repeat(2, 50%);
     grid-template-rows: 1;
     border-bottom: solid lightgrey 3px;
+    max-height: 100%;
 }
 
 #reserveModule{
@@ -63,12 +64,20 @@
     border-radius: 10px;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
+    min-width: auto;
+    max-height: 100%;
+    padding: 5px;
 }
 
 #price-reviews{
     display: flex;
+    flex-wrap: wrap;
     padding-right: 5px;
-    max-width: 100%;
+    max-width: max-content;
+    min-width: min-content;
+    justify-content: center;
+    max-height: min-content;
 }
 
 #price-reviews > div {
