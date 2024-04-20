@@ -9,7 +9,7 @@ export const OpenModalButton = ({
   const { setModalContent, setOnModalClose } = useModal();
 
   return (
-    <button
+    <button className="button"
       onClick={() => {
         if (typeof onButtonClick === "function") onButtonClick();
         if (onModalClose) setOnModalClose(onModalClose);

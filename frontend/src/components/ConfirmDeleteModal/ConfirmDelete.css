@@ -19,17 +19,26 @@
 #choiceBtn button{
     text-wrap: nowrap;
     width: 100%;
+    margin: 5px;
 }
 
 #choiceBtn button:hover{
-    color: aquamarine;
+    color: white;
 }
 
 
 #yesBtn{
     background-color: red;
+    background-image: linear-gradient(red, darkred);
+    border-radius: 5px;
+}
+
+#yesBtn:hover{
+    background-image: linear-gradient(darkred, red);
 }
 
 #noBtn{
-    background-color:darkgrey
+    background-color:darkgrey;
+    background-image: linear-gradient(darkgray, black);
+    border-radius: 5px;
 }

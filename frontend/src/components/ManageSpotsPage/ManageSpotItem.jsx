@@ -29,7 +29,7 @@ const MangageSpotItem = ({ spot }) => {
       </NavLink>
       <div style={{display: 'flex', width: '90%'}}>
         <NavLink to={`/spots/${spot.id}/edit`}>
-          <button style={{marginRight: '10px'}}>Update</button>
+          <button className="button" style={{marginRight: '10px'}}>Update</button>
         </NavLink>
         <div>
             <OpenModalButton

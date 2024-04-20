@@ -64,10 +64,10 @@ function LoginFormModal() {
         </div>
         {errors.credential && <p>{errors.credential}</p>}
         <div className="fieldOpt">
-        <button disabled={disable} type="submit">Log In</button>
+        <button className="button" disabled={disable} type="submit">Log In</button>
         </div>
         <div className="fieldOpt">
-        <button onClick={() => {
+        <button className='button' onClick={() => {
           setCredential(demoUser.credential);
           setPassword(demoUser.password);
           dispatch(sessionActions.login(demoUser))

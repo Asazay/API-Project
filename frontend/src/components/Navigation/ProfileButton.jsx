@@ -47,7 +47,7 @@ function ProfileButton({ user }) {
   return (
     <div id='profileBtn'>
       <div>
-        <button onClick={toggleMenu}>
+        <button className='button' onClick={toggleMenu}>
         <FaUserCircle />
       </button>
       </div>
@@ -58,14 +58,14 @@ function ProfileButton({ user }) {
             {/* <li>{user.username}</li> */}
             <li>{user.email}</li>
             <div>
-            <NavLink to='/spots/current'><button onClick={() => closeMenu()}>Mangage Spots</button></NavLink>
+            <NavLink to='/spots/current'><button className='button' onClick={() => closeMenu()}>Mangage Spots</button></NavLink>
             </div>
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button className='button' onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (
-          <>
+          <div id="login-signup-div">
             <OpenModalMenuItem
               itemText="Log In"
               onItemClick={closeMenu}
@@ -76,7 +76,7 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-          </>
+          </div>
         )}
       </div>
     </div>

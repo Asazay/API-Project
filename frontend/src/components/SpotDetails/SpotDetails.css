@@ -81,12 +81,20 @@
     margin: 0 10px;
 }
 
-#reserveBtn button{
+.reserveBtn button{
    width: 100%;
    background-color: red;
+   background-image: linear-gradient(red, darkred);
    color: white;
    width: 100%;
+   border-radius: 5px;
 }
+
+.reserveBtn button:hover{
+    background-image: linear-gradient(darkred, red);
+    color: whitesmoke;
+    border-radius: 5px;
+ }
 
 #spotReviewDiv button{
     padding: 5px;

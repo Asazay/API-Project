@@ -229,7 +229,7 @@ const SpotDetails = () => {
                 )}
               </div>
             </div>
-            <div id="reserveBtn">
+            <div className="reserveBtn">
               <button onClick={handleReserveClick}>Reserve</button>
             </div>
           </div>
