@@ -208,12 +208,12 @@ const SpotDetails = () => {
             <div id="price-reviews">
               <div>
                 <p>
-                  <span style={{ fontWeight: "bold" }}>${spot.price}</span>{" "}
+                  <span>${spot.price}</span>{" "}
                   night
                 </p>
               </div>
               <div id="rating-reviews">
-                <p>
+                <p id="starReviewsMain">
                   ⭐{ratingInfo.avgStarRating ? ratingInfo.avgStarRating : "New"}
                 </p>
                 {ratingInfo.numReviews > 0 && (

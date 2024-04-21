@@ -7,24 +7,32 @@
 }
 
 .spotTile{
-    width: 300px;
     border-radius: 2%;
+    width: max-content;
 }
 
 .spotTile:hover{
     background-color: azure;
 }
 
+.spotTile p {
+    margin: 1px;
+}
+
+.spotTile p span{
+    margin-left: -5px;
+}
+
 #imgDiv{
     display: flex;
-    width: 100%;
+    width: 250px;
 }
 
 .toolTip img{
-    max-width: 200px;
-    max-height: 150px;
-    min-width: 200px;
-    min-height: 150px;
+    max-width: 250px;
+    max-height: 200px;
+    min-width: 250px;
+    min-height: 200px;
 }
 
 
@@ -38,10 +46,11 @@
 }
 
 #locationStars{
+    justify-content: space-between;
     display: grid;
-    grid-auto-columns: 2;
+    grid-auto-columns: repeat(2, 50%);
     grid-auto-flow: column;
-    width: 220px;
+    width: 250px;
 }
 
 .toolTip .toolTipText {

@@ -63,17 +63,19 @@ function LoginFormModal() {
             />
         </div>
         {errors.credential && <p>{errors.credential}</p>}
-        <div className="fieldOpt">
+        <div id='btnDiv' className="fieldOpt">
         <button className="button" disabled={disable} type="submit">Log In</button>
         </div>
         <div className="fieldOpt">
-        <button className='button' onClick={() => {
+        <a className='button' onClick={() => {
+          // e.preventDefault();
           setCredential(demoUser.credential);
           setPassword(demoUser.password);
           dispatch(sessionActions.login(demoUser))
+          closeModal()
         }}>
-              Demo Login
-            </button>
+              Log in as Demo User
+            </a>
         </div>
       </form>
     </div>

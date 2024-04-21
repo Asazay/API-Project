@@ -2,6 +2,11 @@
     box-sizing: border-box;
 }
 
+#starReviewsMain{
+    position: relative;
+    top: -3px;
+}
+
 #spotDetails{
     display: grid;
     grid-template-columns: 1;
@@ -39,7 +44,7 @@
     grid-auto-flow: column;
     width: 100%;
     max-height: 250px;
-    gap: 2px;
+    column-gap: 2px;
 }
 
 #additionalSpotImgs img{
@@ -66,8 +71,13 @@
     align-items: center;
     max-width: 100%;
     min-width: auto;
-    max-height: 100%;
+    max-height: fit-content;
     padding: 5px;
+    margin: 5px;
+}
+#rating-reviews div p{
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 #price-reviews{
@@ -77,7 +87,13 @@
     max-width: max-content;
     min-width: min-content;
     justify-content: center;
+    align-content: center;
     max-height: min-content;
+}
+
+#price-reviews span{
+    font-weight: bold;
+    color: black;
 }
 
 #price-reviews > div {
@@ -90,20 +106,23 @@
     margin: 0 10px;
 }
 
+.reserveBtn{
+    width: 100%;
+}
+
 .reserveBtn button{
    width: 100%;
    background-color: red;
-   background-image: linear-gradient(red, darkred);
    color: white;
    width: 100%;
    border-radius: 5px;
 }
 
-.reserveBtn button:hover{
+/* .reserveBtn button:hover{
     background-image: linear-gradient(darkred, red);
     color: whitesmoke;
     border-radius: 5px;
- }
+ } */
 
 #spotReviewDiv button{
     padding: 5px;
