@@ -41,8 +41,8 @@ const UpdateSpotForm = () => {
       setCity(spot.city);
       setState(spot.state);
       setDescription(spot.description);
-      setLatitude(spot.latitude);
-      setLongitude(spot.longitude);
+      setLatitude(spot.lat);
+      setLongitude(spot.lng);
       setPhoto1(spot.SpotImages[0]?.url);
       setPhoto2(spot.SpotImages[1]?.url);
       setPhoto3(spot.SpotImages[2]?.url);
@@ -130,7 +130,7 @@ const UpdateSpotForm = () => {
   return (
     <div id="createSpotPage">
       <form id="createSpotForm">
-        <div>
+        <div className="div">
           <h2>Update your Spot</h2>
           <h3>Where&apos;s your place located?</h3>
           <p>
@@ -138,34 +138,34 @@ const UpdateSpotForm = () => {
             reservation
           </p>
         </div>
-        <div id="fieldOpt">
+        <div id="fieldOpt" className="div">
           <label>
             Country{errors.country && <span>{errors.country}</span>}
           </label>
           <input
             type="text"
-            value={country || ''}
+            value={country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="Country"
           />
         </div>
-        <div id="fieldOpt">
+        <div id="fieldOpt" className="div">
           <label>
             Street Address{errors.address && <span>{errors.address}</span>}
           </label>
           <input
             type="text"
-            value={address || ''}
+            value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Address"
           />
         </div>
-        <div>
+        <div className="city-state-div">
           <div id="fieldOpt">
             <label>City{errors.city && <span>{errors.city}</span>}</label>
             <input
               type="text"
-              value={city || ''}
+              value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="City"
             />
@@ -174,18 +174,20 @@ const UpdateSpotForm = () => {
             <label>State{errors.state && <span>{errors.state}</span>}</label>
             <input
               type="text"
-              value={state || ''}
+              value={state}
               onChange={(e) => setState(e.target.value)}
               placeholder="STATE"
             />
           </div>
+        </div>
+        <div id="lat-lng-div">
           <div id="fieldOpt">
             <label>
               Latitude{errors.latitude && <span>{errors.latitdue}</span>}
             </label>
             <input
               type="number"
-              value={latitude || ''}
+              value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
               placeholder="Latitude"
             />
@@ -196,13 +198,13 @@ const UpdateSpotForm = () => {
             </label>
             <input
               type="number"
-              value={longitude || ''}
+              value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
               placeholder="Longitude"
             />
           </div>
         </div>
-        <div>
+        <div className="div">
           <h3>Describe your place to guest</h3>
           <p>
             Mention the best features of your space, any special amentities like
@@ -211,15 +213,16 @@ const UpdateSpotForm = () => {
           <textarea
             rows={10}
             cols={15}
-            value={description || ''}
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Please write at least 30 characters"
           />
+          {!errors.description ? <span className='visible' >p</span> : ""}
           {errors.description && (
             <span>Description needs 30 or more characters</span>
           )}
         </div>
-        <div>
+        <div className="div">
           <h3>Create a title for your spot</h3>
           <p>
             Catch guests attention with a spot title that highlights what makes
@@ -227,13 +230,14 @@ const UpdateSpotForm = () => {
           </p>
           <input
             type="text"
-            value={title || ''}
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Name of your spot"
           />
+          {!errors.name ? <span className='visible' >p</span> : ""}
           {errors.name && <span>{errors.name}</span>}
         </div>
-        <div>
+        <div className="div">
           <h3>Set a base price for your spot</h3>
           <p>
             Competitive pricing can help your listing stand out and rank higher
@@ -241,22 +245,24 @@ const UpdateSpotForm = () => {
           </p>
           <input
             type="text"
-            value={price || ''}
+            value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="Price per night(USD)"
           />
+          {!errors.price ? <span className='visible' >p</span> : ""}
           {errors.price && <span>{errors.price}</span>}
         </div>
-        <div>
+        <div className="div">
           <h3>Liven up your spot with photos</h3>
           <p>Submit a link to at least one photo to publish your spot.</p>
           <div>
             <input
               type="text"
-              value={photo1 || ''}
+              value={photo1}
               onChange={(e) => setPhoto1(e.target.value)}
               placeholder="Preview Image URL"
             />
+             {!errors.photo1 ? <span className='visible' >p</span> : ""}
             {errors.previewPhoto && (
               <span id="fieldOpt">{errors.previewPhoto}</span>
             )}
@@ -265,42 +271,48 @@ const UpdateSpotForm = () => {
           <div>
             <input
               type="text"
-              value={photo2 || ''}
+              value={photo2}
               onChange={(e) => setPhoto2(e.target.value)}
               placeholder="Image URL"
             />
+            {!errors.photo2 ? <span className='visible' >p</span> : ""}
             {errors.photo2 && <span id="fieldOpt">{errors.photo2}</span>}
           </div>
           <div>
             <input
               type="text"
-              value={photo3 || ''}
+              value={photo3}
               onChange={(e) => setPhoto3(e.target.value)}
               placeholder="Image URL"
             />
+            {!errors.photo3 ? <span className='visible' >p</span> : ""}
             {errors.photo3 && <span id="fieldOpt">{errors.photo3}</span>}
           </div>
           <div>
             <input
               type="text"
-              value={photo4 || ''}
+              value={photo4}
               onChange={(e) => setPhoto4(e.target.value)}
               placeholder="Image URL"
             />
+            {!errors.photo4 ? <span className='visible' >p</span> : ""}
             {errors.photo4 && <span id="fieldOpt">{errors.photo4}</span>}
           </div>
           <div>
             <input
               type="text"
-              value={photo5 || ''}
+              value={photo5}
               onChange={(e) => setPhoto5(e.target.value)}
               placeholder="Image URL"
             />
+            {!errors.photo5 ? <span className='visible' >p</span> : ""}
             {errors.photo5 && <span id="fieldOpt">{errors.photo5}</span>}
           </div>
         </div>
-        <div>
-          <button onClick={handleSubmit}>Update your Spot</button>
+        <div className="div">
+          <button className="button" onClick={handleSubmit}>
+            Update your Spot
+          </button>
         </div>
       </form>
     </div>

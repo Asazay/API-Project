@@ -26,8 +26,7 @@ const MangageSpotItem = ({ spot }) => {
             <span id="boldPrice">{`$${spot.price}`}</span> night
           </p>
         </div>
-      </NavLink>
-      <div style={{display: 'flex', width: '90%'}}>
+        <div style={{display: 'flex', width: '90%', marginTop: '20px', paddingBottom: '5px'}}>
         <NavLink to={`/spots/${spot.id}/edit`}>
           <button className="button" style={{marginRight: '10px'}}>Update</button>
         </NavLink>
@@ -38,6 +37,7 @@ const MangageSpotItem = ({ spot }) => {
              />
         </div>
       </div>
+      </NavLink>
     </div>
   );
 };

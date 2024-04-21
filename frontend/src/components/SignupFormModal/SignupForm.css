@@ -1,3 +1,11 @@
 p {
     color: red;
 }
+
+#btnDiv{
+    width: 95%;
+}
+
+#btnDiv button{
+    width: 100%;
+}

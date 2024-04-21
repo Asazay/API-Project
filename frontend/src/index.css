@@ -1,7 +1,4 @@
 /* TODO: Add sitewide styles */
-@media screen and (min-width:769) {
-  
-}
 
 html {
     display: grid;
@@ -36,17 +33,17 @@ html {
     align-self: center;
   }
 
-  .button{
+  /* .button{
     border: solid darkgrey 1px;
     background-image: linear-gradient(whitesmoke,lightgray);
     border-radius: 5px;
-  }
+  } */
 
   
-  .button:hover{
+  /* .button:hover{
     border: solid black 1px;
     background-image: linear-gradient(lightgray, white);
-  }
+  } */
 
   #menuBtn {
     width: fit-content;

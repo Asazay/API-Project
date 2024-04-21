@@ -1,57 +1,91 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-#createSpotPage{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.visible{
+    visibility: hidden;
+}
+
+#createSpotPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+#createSpotForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  border: solid black 2px;
+  padding: 0 20px;
+  margin: 20px;
+  height: fit-content;
+}
+
+#createSpotForm .div {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-self: center;
+  width: 80%;
+  padding: 5px;
+}
+
+#createSpotForm .div div input{
     width: 100%;
-    height: 100%;
+    justify-content: left;
+    margin: 10px 0;
 }
 
-#createSpotForm{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: min-content;
-    border: solid black 2px;
-    padding: 0 20px;
-    margin: 20px;
-    height: fit-content;
+#createSpotForm p {
+  margin-top: -10px;
 }
 
-#createSpotForm div{
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    justify-self: center;
-    width: 50vw;
+.city-state-div {
+  display: grid;
+  grid-template-columns: repeat(2, 70% 30%);
+  grid-template-rows: 1;
+  grid-auto-flow: column;
+  width: 80%;
+  padding: 5px;
+  gap: 5px;
+}
+
+#lat-lng-div {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: 1;
+    grid-auto-flow: column;
+    width: 80%;
     padding: 5px;
-}
+    gap: 5px;
+  }
 
-#createSpotForm p{
-    margin-top: -10px;
-}
-#createSpotForm button{
-    width: 50%;
-    align-self: center;
+#createSpotForm button {
+  width: 50%;
+  align-self: center;
 }
 
 #fieldOpt{
-    display: grid;
-    grid-template-columns: repeat(2, 30% 40%);
-    grid-gap: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-caption{
-    text-align: left;
-    padding-bottom: 5px;
+caption {
+  text-align: left;
+  padding-bottom: 5px;
 }
 
-span{
-    padding-left: 5px;
-    color: red;
-    text-wrap: nowrap;
+span {
+  padding-left: 5px;
+  color: red;
+  text-wrap: nowrap;
+  font-size: 16px;
 }
+

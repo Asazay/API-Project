@@ -8,26 +8,34 @@
     grid-template-columns: 1;
     grid-template-rows: repeat(2, 50%);
     grid-auto-flow: column;
-    width: max-content;
+    width: 100%;
     margin: 0;
 }
 
 #choiceBtn{
-    justify-self: center;
+    width: 100%;
 }
 
 #choiceBtn button{
     text-wrap: nowrap;
     width: 100%;
-    margin: 5px;
+    margin: 5px 0;
 }
 
 #choiceBtn button:hover{
     color: white;
 }
 
-
 #yesBtn{
+    background-color: red;
+}
+
+#noBtn{
+    background-color:darkgrey;
+}
+
+
+/* #yesBtn{
     background-color: red;
     background-image: linear-gradient(red, darkred);
     border-radius: 5px;
@@ -41,4 +49,4 @@
     background-color:darkgrey;
     background-image: linear-gradient(darkgray, black);
     border-radius: 5px;
-}
+} */
